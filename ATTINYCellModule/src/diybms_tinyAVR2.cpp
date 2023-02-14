@@ -36,7 +36,7 @@ HARDWARE ABSTRACTION CODE FOR tinyAVR2
 
 #include <Arduino.h>
 
-#if defined(__AVR_ATtinyx24__)
+#if defined(__AVR_ATtinyx24__) || defined(__AVR_ATtinyx26__)
 
 #include "diybms_tinyAVR2.h"
 

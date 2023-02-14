@@ -145,7 +145,7 @@ void PacketProcessor::TakeAnAnalogueReading(uint8_t _mode)
     return;
   }
 
-#if defined(__AVR_ATtinyx24__)
+#if defined(__AVR_ATtinyx24__) || defined(__AVR_ATtinyx26__)
   // For tiny2 devices we don't use the interrupt method as there is no benefit
   // ATTiny841 ADC readings are less noisy when using sleep mode and interrupts
   ADCReading(diyBMSHAL::BeginADCReading(_mode));

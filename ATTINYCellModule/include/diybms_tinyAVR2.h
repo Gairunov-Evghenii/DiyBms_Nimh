@@ -1,4 +1,4 @@
-#if defined(__AVR_ATtinyx24__)
+#if defined(__AVR_ATtinyx24__) || defined(__AVR_ATtinyx26__)
 
 
 #ifndef DIYBMS_tinyAVR2_H
