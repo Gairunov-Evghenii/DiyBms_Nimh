@@ -167,7 +167,12 @@ uint16_t diyBMSHAL::BeginADCReading(uint8_t mode)
   ADC0.CTRLA = ADC_ENABLE_bm;
 
   // TIMEBASE[4:0] / REFSEL[2:0]
-  ADC0.CTRLC = TIMEBASE_1US | ADC_REFSEL_enum::ADC_REFSEL_VDD_gc; // FOR READING VREF
+  if(mode == 0){ // mode 0 is cell voltage
+   ADC0.CTRLC = TIMEBASE_1US | ADC_REFSEL_enum::ADC_REFSEL_VREFA_gc; // Use VREF A from PA5(1.25V) as reference
+  }
+  else{
+   ADC0.CTRLC = TIMEBASE_1US | ADC_REFSEL_enum::ADC_REFSEL_VDD_gc; // FOR READING VREF
+  }
 
   // Take multiple samples (over sample)
   ADC0.COMMAND = ADC_MODE_BURST_SCALING_gc | ADC_START_IMMEDIATE_gc;

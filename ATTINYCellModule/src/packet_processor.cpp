@@ -218,7 +218,11 @@ uint16_t PacketProcessor::CellVoltage()
 #if (SAMPLEAVERAGING > 1)
   float v = (((float)raw_adc_voltage / (float)SAMPLEAVERAGING) * (float)MV_PER_ADC) * _config->Calibration;
 #else
+  #if defined(__AVR_ATtinyx24__) || defined(__AVR_ATtinyx26__)
+  float v = (float)(raw_adc_voltage) / 65535.0 * 1250L * _config->Calibration;
+  #else
   float v = (float)((1250L * 65535L) / raw_adc_voltage) * _config->Calibration;
+  #endif
 #endif
   return (uint16_t)v;
 }
@@ -242,13 +246,13 @@ bool PacketProcessor::processPacket(PacketStruct *buffer)
   case COMMAND::ReadVoltageAndStatus:
   {
     // Read voltage of VCC
-    // Maximum voltage 8191mV
-    buffer->moduledata[moduledata_index] = CellVoltage() & 0x1FFF;
+    // Maximum voltage 16383mV
+    // Because some additional information stored in this variable
+    buffer->moduledata[moduledata_index] = CellVoltage() & 0x3FFF;
 
     // 3 top bits
     // X = In bypass
     // Y = Bypass over temperature
-    // Z = Not used
 
     if (BypassOverheatCheck())
     {

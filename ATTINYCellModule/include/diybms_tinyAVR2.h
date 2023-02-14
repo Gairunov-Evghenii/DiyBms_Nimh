@@ -169,8 +169,14 @@ public:
   {
     // FREERUN / LEFTADJ / SAMPNUM[3:0]
     ADC0.CTRLF = ADC_SAMPNUM_enum::ADC_SAMPNUM_ACC128_gc;
-    // PA5 = VREF pin
-    ADC0.MUXPOS = ADC_MUXPOS_enum::ADC_MUXPOS_AIN5_gc;
+    #if defined(__AVR_ATtinyx26__)
+      ADC0.MUXPOS = ADC_MUXPOS_enum::ADC_MUXPOS_AIN9_gc; // PB4
+    #elif defined(__AVR_ATtinyx24__)
+      ADC0.MUXPOS = ADC_MUXPOS_enum::ADC_MUXPOS_AIN4_gc; // PA4
+    #else
+      // PA5 = VREF pin
+      ADC0.MUXPOS = ADC_MUXPOS_enum::ADC_MUXPOS_AIN5_gc;
+    #endif
   }
 
   static inline void SelectInternalTemperatureChannel()

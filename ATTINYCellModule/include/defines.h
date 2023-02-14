@@ -29,6 +29,9 @@ https://creativecommons.org/licenses/by-nc-sa/2.0/uk/
 //This is where the data begins in EEPROM
 #define EEPROM_CONFIG_ADDRESS 0
 
+#if defined(__AVR_ATtinyx24__) || defined(__AVR_ATtinyx26__)
+  #define CALIBRATION 11.0909
+#endif
 
 
 // Only the lowest 4 bits can be used!

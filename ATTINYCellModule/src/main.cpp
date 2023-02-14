@@ -79,7 +79,7 @@ volatile uint16_t OnPulseCount = 0;
 void DefaultConfig()
 {
 #if defined(__AVR_ATtinyx24__) || defined(__AVR_ATtinyx26__)
-  myConfig.Calibration = 1.0;
+  myConfig.Calibration = CALIBRATION;
 #else
   // About 2.2007 seems about right on ATTINY841
   myConfig.Calibration = 2.2007;
@@ -173,10 +173,10 @@ FastPID myPID(5.0, 1.0, 0.1, 3, 8, false);
 
 void ValidateConfiguration()
 {
-  if (myConfig.Calibration < 0.8 || myConfig.Calibration > 10.0)
+  if (myConfig.Calibration < 0.7 * CALIBRATION || myConfig.Calibration > 10.0 * CALIBRATION)
   {
 #if defined(__AVR_ATtinyx24__) || defined(__AVR_ATtinyx26__)
-    myConfig.Calibration = 1.0;
+    myConfig.Calibration = CALIBRATION;
 #else
     // About 2.2007 seems about right on ATTINY841
     myConfig.Calibration = 2.2007;

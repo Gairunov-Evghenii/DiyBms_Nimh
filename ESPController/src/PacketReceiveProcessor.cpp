@@ -188,12 +188,11 @@ void PacketReceiveProcessor::ProcessReplyVoltage()
 
     CellModuleInfo *cellptr = &cmi[_packetbuffer.start_address + i];
 
-    // 3 top bits remaining
+    // 2 top bits remaining
     // X = In bypass
     // Y = Bypass over temperature
-    // Z = Not used
 
-    cellptr->voltagemV = _packetbuffer.moduledata[i] & 0x1FFF;
+    cellptr->voltagemV = _packetbuffer.moduledata[i] & 0x3FFF;
     cellptr->inBypass = (_packetbuffer.moduledata[i] & 0x8000) > 0;
     cellptr->bypassOverTemp = (_packetbuffer.moduledata[i] & 0x4000) > 0;
 
