@@ -411,6 +411,16 @@ bool PacketProcessor::processPacket(PacketStruct *buffer)
     MilliAmpHourBalanceCounter = 0;
     return true;
   }
+  case COMMAND::ReadInternalTemperature:
+  {
+    buffer->moduledata[moduledata_index] = Steinhart::ThermistorToCelciusFloat(INT_BCOEFFICIENT, raw_adc_onboard_temperature, MAXIUMUM_ATTINY_ADC_SCALE);
+    return true;
+  }
+  case COMMAND::ReadExternalTemperature:
+  {
+    buffer->moduledata[moduledata_index] = Steinhart::ThermistorToCelciusFloat(INT_BCOEFFICIENT, raw_adc_external_temperature, MAXIUMUM_ATTINY_ADC_SCALE);
+    return true;
+  }
   }
 
   return false;

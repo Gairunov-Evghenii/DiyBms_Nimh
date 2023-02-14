@@ -127,7 +127,9 @@ enum COMMAND : uint8_t
   Timing = 8,
   ReadBalanceCurrentCounter = 9,
   ReadPacketReceivedCounter = 10,
-  ResetBalanceCurrentCounter = 11
+  ResetBalanceCurrentCounter = 11,
+  ReadInternalTemperature=12,
+  ReadExternalTemperature=13,
 };
 
 //NOTE THIS MUST BE EVEN IN SIZE (BYTES) ESP8266 IS 32 BIT AND WILL ALIGN AS SUCH!
@@ -157,8 +159,8 @@ struct CellModuleInfo
   uint16_t voltagemVMin;
   uint16_t voltagemVMax;
   //Signed integer byte (negative temperatures)
-  int8_t internalTemp;
-  int8_t externalTemp;
+  float internalTemp;
+  float externalTemp;
 
   uint8_t BypassOverTempShutdown;
   uint16_t BypassThresholdmV;

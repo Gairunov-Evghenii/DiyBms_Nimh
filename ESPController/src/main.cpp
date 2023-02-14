@@ -599,7 +599,9 @@ void timerEnqueueCallback()
 
     //Need to watch overflow of the uint8 here...
     prg.sendCellVoltageRequest(startmodule, endmodule);
-    prg.sendCellTemperatureRequest(startmodule, endmodule);
+    // prg.sendCellTemperatureRequest(startmodule, endmodule);
+    prg.sendCellExternalTemperatureRequest(startmodule, endmodule);
+    prg.sendCellInternalTemperatureRequest(startmodule, endmodule);
 
     //If any module is in bypass then request PWM reading for whole bank
     for (uint8_t m = startmodule; m <= endmodule; m++)

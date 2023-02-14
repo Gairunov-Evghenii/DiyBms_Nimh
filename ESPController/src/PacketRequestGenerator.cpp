@@ -96,6 +96,16 @@ void PacketRequestGenerator::sendCellTemperatureRequest(uint8_t startmodule, uin
   BuildAndSendRequest(COMMAND::ReadTemperature, startmodule, endmodule);
 }
 
+void PacketRequestGenerator::sendCellInternalTemperatureRequest(uint8_t startmodule, uint8_t endmodule)
+{
+  BuildAndSendRequest(COMMAND::ReadInternalTemperature, startmodule, endmodule);
+}
+
+void PacketRequestGenerator::sendCellExternalTemperatureRequest(uint8_t startmodule, uint8_t endmodule)
+{
+  BuildAndSendRequest(COMMAND::ReadExternalTemperature, startmodule, endmodule);
+}
+
 void PacketRequestGenerator::sendReadBalanceCurrentCountRequest(uint8_t startmodule, uint8_t endmodule)
 {
   BuildAndSendRequest(COMMAND::ReadBalanceCurrentCounter, startmodule, endmodule);

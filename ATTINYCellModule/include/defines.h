@@ -48,7 +48,9 @@ enum COMMAND: uint8_t
     Timing=8,
     ReadBalanceCurrentCounter=9,
     ReadPacketReceivedCounter=10,
-    ResetBalanceCurrentCounter=11
+    ResetBalanceCurrentCounter=11,
+    ReadInternalTemperature=12,
+    ReadExternalTemperature=13,
 };
 
 

@@ -45,6 +45,8 @@ private:
   void ProcessReplySettings();
   void ProcessReplyVoltage();
   void ProcessReplyTemperature();
+  void ProcessReplyInternalTemperature();
+  void ProcessReplyExternalTemperature();
 
   void ProcessReplyBadPacketCount();
   void ProcessReplyBalancePower();

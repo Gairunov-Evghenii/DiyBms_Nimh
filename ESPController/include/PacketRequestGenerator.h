@@ -32,6 +32,8 @@ public:
 
   void sendCellVoltageRequest(uint8_t startmodule, uint8_t endmodule);
   void sendCellTemperatureRequest(uint8_t startmodule, uint8_t endmodule);
+  void sendCellInternalTemperatureRequest(uint8_t startmodule, uint8_t endmodule);
+  void sendCellExternalTemperatureRequest(uint8_t startmodule, uint8_t endmodule);
   void sendReadBalancePowerRequest(uint8_t startmodule, uint8_t endmodule);
   void sendReadBalanceCurrentCountRequest(uint8_t startmodule, uint8_t endmodule);
   void sendReadPacketsReceivedRequest(uint8_t startmodule, uint8_t endmodule);

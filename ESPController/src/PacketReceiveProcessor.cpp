@@ -90,7 +90,12 @@ bool PacketReceiveProcessor::ProcessReply(PacketStruct *receivebuffer)
     case COMMAND::ReadPacketReceivedCounter:
         ProcessReplyReadPacketReceivedCounter();
         break;
-
+    case COMMAND::ReadInternalTemperature:
+        ProcessReplyInternalTemperature();
+        break;
+    case COMMAND::ReadExternalTemperature:
+        ProcessReplyExternalTemperature();
+        break;
       }
 
 #if defined(PACKET_LOGGING_RECEIVE)
@@ -140,6 +145,35 @@ void PacketReceiveProcessor::ProcessReplyTemperature()
   {
     cmi[i].internalTemp = ((_packetbuffer.moduledata[q] & 0xFF00) >> 8) - 40;
     cmi[i].externalTemp = (_packetbuffer.moduledata[q] & 0x00FF) - 40;
+    q++;
+  }
+}
+
+void PacketReceiveProcessor::ProcessReplyInternalTemperature(){
+  uint8_t q = 0;
+  for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
+  {
+    if(0x8000 & _packetbuffer.moduledata[q]){ //detects if the number is negative
+      cmi[i].internalTemp = -((float)(_packetbuffer.moduledata[q] & 0x7fff) / 10.0);
+    }else{
+      cmi[i].internalTemp = ((float)_packetbuffer.moduledata[q]) / 10.0;
+    }
+    SERIAL_DEBUG.print("Internal temperature: ");
+    SERIAL_DEBUG.println(cmi[i].internalTemp);
+    q++;
+  }
+}
+void PacketReceiveProcessor::ProcessReplyExternalTemperature(){
+  uint8_t q = 0;
+  for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
+  {
+    if(0x8000 & _packetbuffer.moduledata[q]){ //detects if the number is negative
+      cmi[i].externalTemp = -((float)(_packetbuffer.moduledata[q] & 0x7fff) / 10.0);
+    }else{
+      cmi[i].externalTemp = ((float)_packetbuffer.moduledata[q]) / 10.0;
+    }
+    SERIAL_DEBUG.print("External temperature: ");
+    SERIAL_DEBUG.println(cmi[i].externalTemp);
     q++;
   }
 }
