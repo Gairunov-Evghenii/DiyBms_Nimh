@@ -66,6 +66,9 @@ def generatejson(target, source, env):
 
     if str(env["BOARD_MCU"]).lower()=="attiny1624":
         signature="1e942a"
+
+    if str(env["BOARD_MCU"]).lower()=="attiny1626":
+        signature="1e9429"
         
     if (signature==""):
         raise Exception("Unknown chip signature")
@@ -77,6 +80,10 @@ def generatejson(target, source, env):
             break
 
     if str(env["BOARD_MCU"]).lower()=="attiny1624":
+        #Add the new entry
+        data['avrprog'].append({'board': board, 'name':  newfilename, 'ver': env["git_sha_short"],'mcu':signature,'efuse':0,'hfuse':0,'lfuse':0})
+
+    if str(env["BOARD_MCU"]).lower()=="attiny1626":
         #Add the new entry
         data['avrprog'].append({'board': board, 'name':  newfilename, 'ver': env["git_sha_short"],'mcu':signature,'efuse':0,'hfuse':0,'lfuse':0})
 
