@@ -52,6 +52,10 @@ private:
   void ProcessReplyBalancePower();
   void ProcessReplyReadBalanceCurrentCounter();
   void ProcessReplyReadPacketReceivedCounter();
+
+  void ProcessReplyNimhState();
+  void ProcessReplyNimhTemperatureSlope();
+  void ProcessReplyNimhVoltageSlope();
 };
 
 #endif

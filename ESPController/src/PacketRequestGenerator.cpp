@@ -174,3 +174,18 @@ void PacketRequestGenerator::setmoduledataFFFF(PacketStruct *_packetbuffer)
     _packetbuffer->moduledata[a] = 0xFFFF;
   }
 }
+
+void PacketRequestGenerator::sendNimhStateRequest(uint8_t startmodule, uint8_t endmodule)
+{
+  BuildAndSendRequest(COMMAND::DebugNimhState, startmodule, endmodule);
+}
+
+void PacketRequestGenerator::sendNimhTemperatureSlopeRequest(uint8_t startmodule, uint8_t endmodule)
+{
+  BuildAndSendRequest(COMMAND::DebugNimhTemperatureSlope, startmodule, endmodule);
+}
+
+void PacketRequestGenerator::sendNimhVoltageSlopeRequest(uint8_t startmodule, uint8_t endmodule)
+{
+  BuildAndSendRequest(COMMAND::DebugNimhVoltageSlope, startmodule, endmodule);
+}

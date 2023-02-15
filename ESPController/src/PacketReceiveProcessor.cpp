@@ -96,6 +96,15 @@ bool PacketReceiveProcessor::ProcessReply(PacketStruct *receivebuffer)
     case COMMAND::ReadExternalTemperature:
         ProcessReplyExternalTemperature();
         break;
+    case COMMAND::DebugNimhState:
+        ProcessReplyNimhState();
+        break;
+    case COMMAND::DebugNimhTemperatureSlope:
+        ProcessReplyNimhTemperatureSlope();
+        break;
+    case COMMAND::DebugNimhVoltageSlope:
+        ProcessReplyNimhVoltageSlope();
+        break;
       }
 
 #if defined(PACKET_LOGGING_RECEIVE)
@@ -161,6 +170,7 @@ void PacketReceiveProcessor::ProcessReplyInternalTemperature(){
     q++;
   }
 }
+
 void PacketReceiveProcessor::ProcessReplyExternalTemperature(){
   uint8_t q = 0;
   for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
@@ -279,4 +289,31 @@ void PacketReceiveProcessor::ProcessReplySettings()
   cmi[m].BoardVersionNumber = _packetbuffer.moduledata[10];
 
   cmi[m].CodeVersionNumber = (_packetbuffer.moduledata[14] << 16) +_packetbuffer.moduledata[15];
+}
+
+void PacketReceiveProcessor::ProcessReplyNimhState(){
+  uint8_t q = 0;
+  for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
+  {
+    cmi[i].nimhState = _packetbuffer.moduledata[q];
+    q++;
+  }
+}
+
+void PacketReceiveProcessor::ProcessReplyNimhTemperatureSlope(){
+  uint8_t q = 0;
+  for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
+  {
+    cmi[i].nimhTempSlope = _packetbuffer.moduledata[q];
+    q++;
+  }
+}
+
+void PacketReceiveProcessor::ProcessReplyNimhVoltageSlope(){
+  uint8_t q = 0;
+  for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
+  {
+    cmi[i].nimhVoltSlope = _packetbuffer.moduledata[q];
+    q++;
+  }
 }

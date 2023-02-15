@@ -41,6 +41,10 @@ public:
   void sendTimingRequest();
   void sendResetBalanceCurrentCounter();
 
+  void sendNimhStateRequest(uint8_t startmodule, uint8_t endmodule);
+  void sendNimhTemperatureSlopeRequest(uint8_t startmodule, uint8_t endmodule);
+  void sendNimhVoltageSlopeRequest(uint8_t startmodule, uint8_t endmodule);
+
   uint32_t packetsGenerated = 0;
 
 

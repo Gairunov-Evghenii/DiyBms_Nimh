@@ -602,6 +602,9 @@ void timerEnqueueCallback()
     // prg.sendCellTemperatureRequest(startmodule, endmodule);
     prg.sendCellExternalTemperatureRequest(startmodule, endmodule);
     prg.sendCellInternalTemperatureRequest(startmodule, endmodule);
+    prg.sendNimhStateRequest(startmodule, endmodule);
+    prg.sendNimhTemperatureSlopeRequest(startmodule, endmodule);
+    prg.sendNimhVoltageSlopeRequest(startmodule, endmodule);
 
     //If any module is in bypass then request PWM reading for whole bank
     for (uint8_t m = startmodule; m <= endmodule; m++)
@@ -1040,6 +1043,9 @@ void sendMqttPacket()
         doc["bypassT"] = cmi[i].bypassOverTemp ? 1 : 0;
         doc["bpc"] = cmi[i].badPacketCount;
         doc["mAh"] = cmi[i].BalanceCurrentCount;
+        doc["nimh_state"] = cmi[i].nimhState;
+        doc["nimh_t_slope"] = cmi[i].nimhTempSlope;
+        doc["nimh_v_slope"] = cmi[i].nimhVoltSlope;
         serializeJson(doc, jsonbuffer, sizeof(jsonbuffer));
 
         sprintf(topic, "%s", mysettings.mqtt_topic);
