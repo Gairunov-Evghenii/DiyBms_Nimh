@@ -25,6 +25,7 @@ https://creativecommons.org/licenses/by-nc-sa/2.0/uk/
 */
 
 #include "packet_processor.h"
+#include "nimh_bms.h"
 
 // Enable this for debug/testing a single module will pretend to be an entire bank of 16 modules
 // you are likely to get OOS errors when these are running in a string as the timings will be wrong
@@ -423,6 +424,24 @@ bool PacketProcessor::processPacket(PacketStruct *buffer)
   case COMMAND::ReadExternalTemperature:
   {
     buffer->moduledata[moduledata_index] = Steinhart::ThermistorToCelciusFloat(INT_BCOEFFICIENT, raw_adc_external_temperature, MAXIUMUM_ATTINY_ADC_SCALE);
+    return true;
+  }
+
+  case COMMAND::DebugNimhState:
+  {
+    buffer->moduledata[moduledata_index] = nimh_bms_check_state();
+    return true;
+  }
+
+  case COMMAND::DebugNimhTemperatureSlope:
+  {
+    buffer->moduledata[moduledata_index] = nimh_bms_check_temperature_slope();
+    return true;
+  }
+
+  case COMMAND::DebugNimhVoltageSlope:
+  {
+    buffer->moduledata[moduledata_index] = nimh_bms_check_voltage_slope();
     return true;
   }
   }
