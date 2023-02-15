@@ -1064,7 +1064,7 @@ void DIYBMSServer::monitor2(AsyncWebServerRequest *request)
 
     if (cmi[i].valid && cmi[i].internalTemp != -40)
     {
-      response->print(cmi[i].internalTemp);
+      response->print(((float)cmi[i].internalTemp)/10.0);
     }
     else
     {
@@ -1087,7 +1087,7 @@ void DIYBMSServer::monitor2(AsyncWebServerRequest *request)
 
     if (cmi[i].valid && cmi[i].externalTemp != -40)
     {
-      response->print(cmi[i].externalTemp);
+      response->print(((float)cmi[i].externalTemp)/10.0);
     }
     else
     {

@@ -131,8 +131,7 @@ enum COMMAND : uint8_t
   ReadInternalTemperature=12,
   ReadExternalTemperature=13,
   DebugNimhState=14,
-  DebugNimhTemperatureSlope=15,
-  DebugNimhVoltageSlope=16,
+  DebugNimhTemperatureSlope=15
 };
 
 //NOTE THIS MUST BE EVEN IN SIZE (BYTES) ESP8266 IS 32 BIT AND WILL ALIGN AS SUCH!
@@ -162,12 +161,11 @@ struct CellModuleInfo
   uint16_t voltagemVMin;
   uint16_t voltagemVMax;
   //Signed integer byte (negative temperatures)
-  float internalTemp;
-  float externalTemp;
+  int16_t internalTemp;
+  int16_t externalTemp;
 
   uint16_t nimhState;
   int16_t nimhTempSlope;
-  int16_t nimhVoltSlope;
 
   uint8_t BypassOverTempShutdown;
   uint16_t BypassThresholdmV;

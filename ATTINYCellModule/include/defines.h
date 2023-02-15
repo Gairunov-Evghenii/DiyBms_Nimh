@@ -52,8 +52,7 @@ enum COMMAND: uint8_t
     ReadInternalTemperature=12,
     ReadExternalTemperature=13,
     DebugNimhState=14,
-    DebugNimhTemperatureSlope=15,
-    DebugNimhVoltageSlope=16,
+    DebugNimhTemperatureSlope=15
 };
 
 

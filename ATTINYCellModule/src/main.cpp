@@ -463,6 +463,7 @@ void loop()
     nimh_bms_last_read = millis();
     nimh_bms_read_temperature(PP.ExternalTemperature());
     nimh_bms_read_voltage(PP.CellVoltage());
+    nimh_bms_sample_range_tick();
   }
 
   // Switch reference off if we are not in bypass (otherwise leave on)

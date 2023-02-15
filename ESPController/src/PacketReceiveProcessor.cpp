@@ -102,9 +102,6 @@ bool PacketReceiveProcessor::ProcessReply(PacketStruct *receivebuffer)
     case COMMAND::DebugNimhTemperatureSlope:
         ProcessReplyNimhTemperatureSlope();
         break;
-    case COMMAND::DebugNimhVoltageSlope:
-        ProcessReplyNimhVoltageSlope();
-        break;
       }
 
 #if defined(PACKET_LOGGING_RECEIVE)
@@ -163,9 +160,9 @@ void PacketReceiveProcessor::ProcessReplyInternalTemperature(){
   for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
   {
     if(0x8000 & _packetbuffer.moduledata[q]){ //detects if the number is negative
-      cmi[i].internalTemp = -((float)(_packetbuffer.moduledata[q] & 0x7fff) / 10.0);
+      cmi[i].internalTemp = -(_packetbuffer.moduledata[q] & 0x7fff);
     }else{
-      cmi[i].internalTemp = ((float)_packetbuffer.moduledata[q]) / 10.0;
+      cmi[i].internalTemp = _packetbuffer.moduledata[q];
     }
     q++;
   }
@@ -176,10 +173,13 @@ void PacketReceiveProcessor::ProcessReplyExternalTemperature(){
   for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
   {
     if(0x8000 & _packetbuffer.moduledata[q]){ //detects if the number is negative
-      cmi[i].externalTemp = -((float)(_packetbuffer.moduledata[q] & 0x7fff) / 10.0);
+      cmi[i].externalTemp = -(_packetbuffer.moduledata[q] & 0x7fff);
     }else{
-      cmi[i].externalTemp = ((float)_packetbuffer.moduledata[q]) / 10.0;
+      cmi[i].externalTemp = _packetbuffer.moduledata[q];
     }
+    SERIAL_DEBUG.println();
+    SERIAL_DEBUG.printf("nimh temp recived: %d\n", cmi[i].externalTemp);
+    SERIAL_DEBUG.println();
     q++;
   }
 }
@@ -305,15 +305,9 @@ void PacketReceiveProcessor::ProcessReplyNimhTemperatureSlope(){
   for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
   {
     cmi[i].nimhTempSlope = _packetbuffer.moduledata[q];
-    q++;
-  }
-}
-
-void PacketReceiveProcessor::ProcessReplyNimhVoltageSlope(){
-  uint8_t q = 0;
-  for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
-  {
-    cmi[i].nimhVoltSlope = _packetbuffer.moduledata[q];
+    SERIAL_DEBUG.println();
+    SERIAL_DEBUG.printf("nimh temp slope recived: %d\n", cmi[i].nimhTempSlope);
+    SERIAL_DEBUG.println();
     q++;
   }
 }

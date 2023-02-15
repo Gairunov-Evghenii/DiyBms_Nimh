@@ -435,15 +435,10 @@ bool PacketProcessor::processPacket(PacketStruct *buffer)
 
   case COMMAND::DebugNimhTemperatureSlope:
   {
-    buffer->moduledata[moduledata_index] = nimh_bms_check_temperature_slope();
+    buffer->moduledata[moduledata_index] = (uint16_t)nimh_bms_check_temperature_slope();
     return true;
   }
 
-  case COMMAND::DebugNimhVoltageSlope:
-  {
-    buffer->moduledata[moduledata_index] = nimh_bms_check_voltage_slope();
-    return true;
-  }
   }
 
   return false;

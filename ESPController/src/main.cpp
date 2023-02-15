@@ -604,7 +604,6 @@ void timerEnqueueCallback()
     prg.sendCellInternalTemperatureRequest(startmodule, endmodule);
     prg.sendNimhStateRequest(startmodule, endmodule);
     prg.sendNimhTemperatureSlopeRequest(startmodule, endmodule);
-    prg.sendNimhVoltageSlopeRequest(startmodule, endmodule);
 
     //If any module is in bypass then request PWM reading for whole bank
     for (uint8_t m = startmodule; m <= endmodule; m++)
@@ -1033,19 +1032,18 @@ void sendMqttPacket()
         uint8_t module = i - (bank * mysettings.totalNumberOfSeriesModules);
 
         doc.clear();
-        doc["voltage"] = (float)cmi[i].voltagemV / (float)1000.0;
-        doc["vMax"] = (float)cmi[i].voltagemVMax / (float)1000.0;
-        doc["vMin"] = (float)cmi[i].voltagemVMin / (float)1000.0;
+        doc["voltage"] = (float)cmi[i].voltagemV;
+        doc["vMax"] = (float)cmi[i].voltagemVMax;
+        doc["vMin"] = (float)cmi[i].voltagemVMin;
         doc["inttemp"] = cmi[i].internalTemp;
         doc["exttemp"] = cmi[i].externalTemp;
-        doc["bypass"] = cmi[i].inBypass ? 1 : 0;
-        doc["PWM"] = (int)((float)cmi[i].PWMValue / (float)255.0 * 100);
-        doc["bypassT"] = cmi[i].bypassOverTemp ? 1 : 0;
-        doc["bpc"] = cmi[i].badPacketCount;
-        doc["mAh"] = cmi[i].BalanceCurrentCount;
+        //doc["bypass"] = cmi[i].inBypass ? 1 : 0;
+        ////doc["PWM"] = (int)((float)cmi[i].PWMValue / (float)255.0 * 100);
+        //doc["bypassT"] = cmi[i].bypassOverTemp ? 1 : 0;
+        //doc["bpc"] = cmi[i].badPacketCount;
+        //doc["mAh"] = cmi[i].BalanceCurrentCount;
         doc["nimh_state"] = cmi[i].nimhState;
         doc["nimh_t_slope"] = cmi[i].nimhTempSlope;
-        doc["nimh_v_slope"] = cmi[i].nimhVoltSlope;
         serializeJson(doc, jsonbuffer, sizeof(jsonbuffer));
 
         sprintf(topic, "%s", mysettings.mqtt_topic);
@@ -1086,7 +1084,7 @@ void sendMqttPacket()
 void onMqttConnect(bool sessionPresent)
 {
   SERIAL_DEBUG.println(F("Connected to MQTT."));
-  myTimerSendMqttPacket.attach(1, sendMqttPacket);
+  myTimerSendMqttPacket.attach(3, sendMqttPacket);
   //myTimerSendMqttStatus.attach(25, sendMqttStatus);
 }
 
@@ -1554,7 +1552,8 @@ void setup()
 
     //Ensure we service the cell modules every 5 or 10 seconds, depending on number of cells being serviced
     //slower stops the queues from overflowing when a lot of cells are being monitored
-    myTimer.attach((TotalNumberOfCells() <= maximum_cell_modules_per_packet) ? 5 : 10, timerEnqueueCallback);
+    myTimer.attach((TotalNumberOfCells() <= maximum_cell_modules_per_packet) ? 1 : 10, timerEnqueueCallback);
+    // myTimer.attach((TotalNumberOfCells() <= maximum_cell_modules_per_packet) ? 5 : 10, timerEnqueueCallback);
 
     //Process rules every 5 seconds
     myTimerRelay.attach(5, timerProcessRules);

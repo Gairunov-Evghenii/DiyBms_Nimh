@@ -184,8 +184,3 @@ void PacketRequestGenerator::sendNimhTemperatureSlopeRequest(uint8_t startmodule
 {
   BuildAndSendRequest(COMMAND::DebugNimhTemperatureSlope, startmodule, endmodule);
 }
-
-void PacketRequestGenerator::sendNimhVoltageSlopeRequest(uint8_t startmodule, uint8_t endmodule)
-{
-  BuildAndSendRequest(COMMAND::DebugNimhVoltageSlope, startmodule, endmodule);
-}
