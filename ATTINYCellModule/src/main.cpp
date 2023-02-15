@@ -60,6 +60,8 @@ https://trolsoft.ru/en/uart-calc
 #include <SerialEncoder.h>
 #include "packet_processor.h"
 
+#include "nimh_bms.h"
+
 uint8_t SerialPacketReceiveBuffer[8 + sizeof(PacketStruct)];
 
 SerialEncoder myPacketSerial;
