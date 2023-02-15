@@ -44,6 +44,10 @@ int16_t PacketProcessor::InternalTemperature()
   return Steinhart::ThermistorToCelcius(INT_BCOEFFICIENT, raw_adc_onboard_temperature, MAXIUMUM_ATTINY_ADC_SCALE);
 }
 
+uint16_t PacketProcessor::ExternalTemperature(){
+  return Steinhart::ThermistorToCelciusFloat(INT_BCOEFFICIENT, raw_adc_external_temperature, MAXIUMUM_ATTINY_ADC_SCALE);
+}
+
 // Returns TRUE if the cell voltage is greater than the required setting
 bool PacketProcessor::BypassCheck()
 {

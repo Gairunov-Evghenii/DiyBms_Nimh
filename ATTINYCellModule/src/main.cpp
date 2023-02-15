@@ -282,7 +282,9 @@ void setup()
   Serial.begin(DIYBMSBAUD, SERIAL_8N1);
 
   myPacketSerial.begin(&Serial, &onPacketReceived, sizeof(PacketStruct), SerialPacketReceiveBuffer, sizeof(SerialPacketReceiveBuffer));
+  nimh_bms_init();
 }
+
 void BalanceTimer()
 {
   // when v=1, the duration between on and off is 2.019ms (1.0095ms per
@@ -453,6 +455,14 @@ void loop()
       PP.TakeAnAnalogueReading(ADC_CELL_VOLTAGE);
     }
 #endif
+  }
+  
+  //nimh_bms code
+  static uint64_t nimh_bms_last_read = 0;
+  if(millis() - nimh_bms_last_read > READ_INTERVAL * 1000){
+    nimh_bms_last_read = millis();
+    nimh_bms_read_temperature(PP.ExternalTemperature());
+    nimh_bms_read_voltage(PP.CellVoltage());
   }
 
   // Switch reference off if we are not in bypass (otherwise leave on)
