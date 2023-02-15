@@ -300,7 +300,7 @@ void BalanceTimer()
   if (InterruptCounter <= PP.PWMSetPoint)
   {
     // Enable the pin
-    diyBMSHAL::DumpLoadOn();
+    // diyBMSHAL::DumpLoadOn();
 
     // Count the number of "on" periods, so we can calculate the amount of
     // energy consumed
