@@ -1042,7 +1042,8 @@ void sendMqttPacket()
         doc["mAh"] = cmi[i].BalanceCurrentCount;
         serializeJson(doc, jsonbuffer, sizeof(jsonbuffer));
 
-        sprintf(topic, "%s/%d/%d", mysettings.mqtt_topic, bank, module);
+        sprintf(topic, "%s", mysettings.mqtt_topic);
+        // sprintf(topic, "%s/%d/%d", mysettings.mqtt_topic, bank, module);
 
         mqttClient.publish(topic, 0, false, jsonbuffer);
 
@@ -1079,8 +1080,8 @@ void sendMqttPacket()
 void onMqttConnect(bool sessionPresent)
 {
   SERIAL_DEBUG.println(F("Connected to MQTT."));
-  myTimerSendMqttPacket.attach(5, sendMqttPacket);
-  myTimerSendMqttStatus.attach(25, sendMqttStatus);
+  myTimerSendMqttPacket.attach(1, sendMqttPacket);
+  //myTimerSendMqttStatus.attach(25, sendMqttStatus);
 }
 
 void LoadConfiguration()

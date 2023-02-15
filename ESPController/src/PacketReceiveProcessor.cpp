@@ -158,8 +158,6 @@ void PacketReceiveProcessor::ProcessReplyInternalTemperature(){
     }else{
       cmi[i].internalTemp = ((float)_packetbuffer.moduledata[q]) / 10.0;
     }
-    SERIAL_DEBUG.print("Internal temperature: ");
-    SERIAL_DEBUG.println(cmi[i].internalTemp);
     q++;
   }
 }
@@ -172,8 +170,6 @@ void PacketReceiveProcessor::ProcessReplyExternalTemperature(){
     }else{
       cmi[i].externalTemp = ((float)_packetbuffer.moduledata[q]) / 10.0;
     }
-    SERIAL_DEBUG.print("External temperature: ");
-    SERIAL_DEBUG.println(cmi[i].externalTemp);
     q++;
   }
 }
