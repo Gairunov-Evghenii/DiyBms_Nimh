@@ -151,6 +151,7 @@ void PacketRequestGenerator::BuildAndSendRequest(COMMAND command, uint8_t startm
 
 void PacketRequestGenerator::pushPacketToQueue(PacketStruct *_packetbuffer)
 {
+  //SERIAL_DEBUG.printf("Request count: %d\n", _requestq->getCount());
   _requestq->push(_packetbuffer);
   packetsGenerated++;
 }

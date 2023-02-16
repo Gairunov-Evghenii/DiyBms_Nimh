@@ -57,6 +57,9 @@ HAL_ESP8266 hal;
 
 #include "Rules.h"
 
+bool mqtt_connected = false;
+void sendMqttPacket();
+
 volatile bool emergencyStop = false;
 
 Rules rules;
@@ -593,6 +596,11 @@ void timerProcessRules()
 
 void timerEnqueueCallback()
 {
+  static uint64_t last_enter = 0;
+  last_enter = millis() - last_enter;
+  #if defined(MY_DEBUGG)
+    SERIAL_DEBUG.printf("\ntimer enquee enter: %d\n", last_enter);
+  #endif
   //this is called regularly on a timer, it determines what request to make to the modules (via the request queue)
   uint16_t i = 0;
   uint16_t max = TotalNumberOfCells();
@@ -616,6 +624,9 @@ void timerEnqueueCallback()
     prg.sendCellInternalTemperatureRequest(startmodule, endmodule);
     prg.sendNimhStateRequest(startmodule, endmodule);
     prg.sendNimhTemperatureSlopeRequest(startmodule, endmodule);
+    if(mqtt_connected){
+      sendMqttPacket();
+    }
 
     //If any module is in bypass then request PWM reading for whole bank
     for (uint8_t m = startmodule; m <= endmodule; m++)
@@ -924,7 +935,8 @@ void onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
 {
   SERIAL_DEBUG.println(F("Disconnected from MQTT."));
 
-  myTimerSendMqttPacket.detach();
+  mqtt_connected = false;
+  //myTimerSendMqttPacket.detach();
   myTimerSendMqttStatus.detach();
 
   if (WiFi.isConnected())
@@ -1096,7 +1108,8 @@ void sendMqttPacket()
 void onMqttConnect(bool sessionPresent)
 {
   SERIAL_DEBUG.println(F("Connected to MQTT."));
-  myTimerSendMqttPacket.attach(5, sendMqttPacket);
+  //myTimerSendMqttPacket.attach(5, sendMqttPacket);
+  mqtt_connected = true;
   //myTimerSendMqttStatus.attach(25, sendMqttStatus);
 }
 
@@ -1564,17 +1577,20 @@ void setup()
 
     //Ensure we service the cell modules every 5 or 10 seconds, depending on number of cells being serviced
     //slower stops the queues from overflowing when a lot of cells are being monitored
-    myTimer.attach((TotalNumberOfCells() <= maximum_cell_modules_per_packet) ? 2 : 10, timerEnqueueCallback);
+    //myTimer.attach((TotalNumberOfCells() <= maximum_cell_modules_per_packet) ? 5 : 10, timerEnqueueCallback);
+      myTimer.attach((TotalNumberOfCells() <= maximum_cell_modules_per_packet) ? 1 : 3, timerEnqueueCallback);
 
     //Process rules every 5 seconds
     myTimerRelay.attach(5, timerProcessRules);
 
     //We process the transmit queue every 1 second (this needs to be lower delay than the queue fills)
     //and slower than it takes a single module to process a command (about 200ms @ 2400baud)
-    myTransmitTimer.attach(1, timerTransmitCallback);
+    // myTransmitTimer.attach(1, timerTransmitCallback);
+    myTransmitTimer.attach_ms(100, timerTransmitCallback);
 
     //Service reply queue
-    myReplyTimer.attach(1, serviceReplyQueue);
+    // myReplyTimer.attach(1, serviceReplyQueue);
+    myReplyTimer.attach_ms(100, serviceReplyQueue);
 
     //This is a lazy timer for low priority tasks
     myLazyTimer.attach(8, timerLazyCallback);

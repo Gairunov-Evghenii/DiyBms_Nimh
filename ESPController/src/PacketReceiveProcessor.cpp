@@ -164,6 +164,9 @@ void PacketReceiveProcessor::ProcessReplyInternalTemperature(){
     }else{
       cmi[i].internalTemp = _packetbuffer.moduledata[q];
     }
+    #if defined(MY_DEBUGG)
+      SERIAL_DEBUG.printf("internalTemp %d\n", cmi[i].internalTemp);
+    #endif
     q++;
   }
 }
@@ -177,6 +180,9 @@ void PacketReceiveProcessor::ProcessReplyExternalTemperature(){
     }else{
       cmi[i].externalTemp = _packetbuffer.moduledata[q];
     }
+    #if defined(MY_DEBUGG)
+      SERIAL_DEBUG.printf("externalTemp %d\n", cmi[i].externalTemp);
+    #endif
     q++;
   }
 }
@@ -230,6 +236,9 @@ void PacketReceiveProcessor::ProcessReplyVoltage()
     // Y = Bypass over temperature
 
     cellptr->voltagemV = _packetbuffer.moduledata[i] & 0x3FFF;
+    #if defined(MY_DEBUGG)
+      SERIAL_DEBUG.printf("voltagemV %d\n", cellptr->voltagemV);
+    #endif
     cellptr->inBypass = (_packetbuffer.moduledata[i] & 0x8000) > 0;
     cellptr->bypassOverTemp = (_packetbuffer.moduledata[i] & 0x4000) > 0;
 
@@ -293,6 +302,9 @@ void PacketReceiveProcessor::ProcessReplyNimhState(){
   for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
   {
     cmi[i].nimhState = _packetbuffer.moduledata[q];
+    #if defined(MY_DEBUGG)
+      SERIAL_DEBUG.printf("Nimh State %d\n", cmi[i].nimhState);
+    #endif
     q++;
   }
 }
@@ -302,6 +314,9 @@ void PacketReceiveProcessor::ProcessReplyNimhTemperatureSlope(){
   for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
   {
     cmi[i].nimhTempSlope = _packetbuffer.moduledata[q];
+    #if defined(MY_DEBUGG)
+      SERIAL_DEBUG.printf("Nimh Value %d\n", cmi[i].nimhTempSlope);
+    #endif
     q++;
   }
 }

@@ -96,7 +96,8 @@ void DefaultConfig()
 #endif
 
   // Start bypass at 4.1V
-  myConfig.BypassThresholdmV = 4100;
+  //myConfig.BypassThresholdmV = 4100;
+  myConfig.BypassThresholdmV = VOLTAGE_HIGH;
 
   //#if defined(DIYBMSMODULEVERSION) && (DIYBMSMODULEVERSION == 430 || DIYBMSMODULEVERSION == 420 || DIYBMSMODULEVERSION == 421)
   // Murata Electronics NCP18WB473J03RB = 47K ±5% 4050K ±2% 100mW 0603 NTC Thermistors RoHS
