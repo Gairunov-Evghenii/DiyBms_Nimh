@@ -199,6 +199,18 @@ void dumpPacketToDebug(char indicator, PacketStruct *buffer)
   case COMMAND::ReadPacketReceivedCounter:
     SERIAL_DEBUG.print(F("PktRvd   "));
     break;
+  case COMMAND::ReadInternalTemperature:
+    SERIAL_DEBUG.print(F("ReadInternalTemperature   "));
+    break;
+  case COMMAND::ReadExternalTemperature:
+    SERIAL_DEBUG.print(F("ReadExternalTemperature   "));
+    break;
+  case COMMAND::DebugNimhState:
+    SERIAL_DEBUG.print(F("DebugNimhState   "));
+    break;
+  case COMMAND::DebugNimhTemperatureSlope:
+    SERIAL_DEBUG.print(F("DebugNimhTemperatureSlope   "));
+    break;
   default:
     SERIAL_DEBUG.print(F("??????   "));
     break;
@@ -1084,7 +1096,7 @@ void sendMqttPacket()
 void onMqttConnect(bool sessionPresent)
 {
   SERIAL_DEBUG.println(F("Connected to MQTT."));
-  myTimerSendMqttPacket.attach(3, sendMqttPacket);
+  myTimerSendMqttPacket.attach(5, sendMqttPacket);
   //myTimerSendMqttStatus.attach(25, sendMqttStatus);
 }
 
@@ -1552,8 +1564,7 @@ void setup()
 
     //Ensure we service the cell modules every 5 or 10 seconds, depending on number of cells being serviced
     //slower stops the queues from overflowing when a lot of cells are being monitored
-    myTimer.attach((TotalNumberOfCells() <= maximum_cell_modules_per_packet) ? 1 : 10, timerEnqueueCallback);
-    // myTimer.attach((TotalNumberOfCells() <= maximum_cell_modules_per_packet) ? 5 : 10, timerEnqueueCallback);
+    myTimer.attach((TotalNumberOfCells() <= maximum_cell_modules_per_packet) ? 2 : 10, timerEnqueueCallback);
 
     //Process rules every 5 seconds
     myTimerRelay.attach(5, timerProcessRules);

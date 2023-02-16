@@ -18,7 +18,8 @@
 
 #define READ_INTERVAL 1
  //seconds
-#define CUT_OFF_TIMER (3600 / READ_INTERVAL)
+#define CUT_OFF_TIMER (5400 / READ_INTERVAL)
+#define CHARGED_TIME_REST 16
 
 enum BMS_STATE {
     BMS_STATE_UNKNOWN = 0,
@@ -37,14 +38,14 @@ enum SAMPLE{
     PREVIOUS
 };
 
-#define SAMPLE_RANGE 4
+#define SAMPLE_RANGE 8
 typedef struct nimh_bms{
     uint16_t state;
     int16_t temperature;
     uint16_t voltage_mV;
     int16_t max_temp[2];
     int16_t min_temp[2];
-    int16_t temp_slope;
+    int16_t avg_temp_slope[2];
     int16_t max_voltage[2];
     int16_t min_voltage[2];
     uint16_t timer;
@@ -55,6 +56,6 @@ void nimh_bms_read_temperature(uint16_t temp);
 void nimh_bms_read_voltage(uint16_t voltage);
 void nimh_bms_sample_range_tick();
 uint16_t nimh_bms_check_state();
-int16_t nimh_bms_check_temperature_slope();
+int16_t nimh_bms_check_temperature_state();
 
 #endif
