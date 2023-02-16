@@ -177,9 +177,6 @@ void PacketReceiveProcessor::ProcessReplyExternalTemperature(){
     }else{
       cmi[i].externalTemp = _packetbuffer.moduledata[q];
     }
-    SERIAL_DEBUG.println();
-    SERIAL_DEBUG.printf("nimh temp recived: %d\n", cmi[i].externalTemp);
-    SERIAL_DEBUG.println();
     q++;
   }
 }
@@ -305,9 +302,6 @@ void PacketReceiveProcessor::ProcessReplyNimhTemperatureSlope(){
   for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
   {
     cmi[i].nimhTempSlope = _packetbuffer.moduledata[q];
-    SERIAL_DEBUG.println();
-    SERIAL_DEBUG.printf("nimh temp slope recived: %d\n", cmi[i].nimhTempSlope);
-    SERIAL_DEBUG.println();
     q++;
   }
 }
