@@ -1067,7 +1067,9 @@ void sendMqttPacket()
         //doc["bpc"] = cmi[i].badPacketCount;
         //doc["mAh"] = cmi[i].BalanceCurrentCount;
         doc["nimh_state"] = cmi[i].nimhState;
-        doc["nimh_t_slope"] = cmi[i].nimhTempSlope;
+        //doc["nimh_t_slope"] = cmi[i].nimhTempSlope;
+        doc["nimh_max_t"] = (((uint16_t)cmi[i].nimhTempSlope) >> 8)+150;
+        doc["nimh_min_t"] = (((uint16_t)cmi[i].nimhTempSlope) & 0xff)+150;
         serializeJson(doc, jsonbuffer, sizeof(jsonbuffer));
 
         sprintf(topic, "%s", mysettings.mqtt_topic);
@@ -1578,7 +1580,7 @@ void setup()
     //Ensure we service the cell modules every 5 or 10 seconds, depending on number of cells being serviced
     //slower stops the queues from overflowing when a lot of cells are being monitored
     //myTimer.attach((TotalNumberOfCells() <= maximum_cell_modules_per_packet) ? 5 : 10, timerEnqueueCallback);
-      myTimer.attach((TotalNumberOfCells() <= maximum_cell_modules_per_packet) ? 1 : 3, timerEnqueueCallback);
+    myTimer.attach((TotalNumberOfCells() <= maximum_cell_modules_per_packet) ? 1 : 3, timerEnqueueCallback);
 
     //Process rules every 5 seconds
     myTimerRelay.attach(5, timerProcessRules);

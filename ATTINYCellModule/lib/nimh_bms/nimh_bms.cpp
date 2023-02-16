@@ -126,6 +126,10 @@ uint16_t nimh_bms_check_state()
 
 int16_t nimh_bms_check_temperature_state()
 {
+    return (
+        (((uint8_t)(bms.max_temp[PREVIOUS] - 150))<<8)|
+        ((uint8_t)(bms.min_temp[PREVIOUS] - 150))
+    );
     return bms.avg_temp_slope[PREVIOUS];
 }
 
