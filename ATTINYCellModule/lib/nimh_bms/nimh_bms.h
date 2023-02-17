@@ -12,25 +12,29 @@
 
 #define VOLTAGE_HIGH (1400 * NUMBER_OF_CELLS)
 
-#define TEMPERATURE_CUT_OFF 550
+#define TEMPERATURE_CUT_OFF 400
 #define TEMPERATURE_LOW 100
-#define TEMPERATURE_HIGH 400
-
+#define TEMPERATURE_HIGH 350
 #define READ_INTERVAL 1
  //seconds
 #define CUT_OFF_TIMER (5400 / READ_INTERVAL)
-#define CHARGED_TIME_REST 16
 
 enum BMS_STATE {
-    BMS_STATE_UNKNOWN = 0,
-    BMS_STATE_INITIALIZED = 1,
-    BMS_STATE_CHARGING = 2,
-    BMS_STATE_CHARGED = 4,
-    BMS_STATE_OVERVOLTAGE = 8,
-    BMS_STATE_UNDERVOLTAGE = 16,
-    BMS_STATE_TEMPERATURE_HIGH = 32,
-    BMS_STATE_TEMPERATURE_LOW = 64,
-    BMS_STATE_TEMPERATURE_CUT_OFF = 128,
+    BMS_STATE_CRITICAL = 0,
+    BMS_STATE_INITIALIZED,
+    BMS_STATE_CHARGING,
+    BMS_STATE_CHARGED,
+    BMS_STATE_DISCHARGING,
+
+};
+
+enum BMS_ERROR_STATE {
+    BMS_ERROR_STATE_NONE = 0,
+    BMS_ERROR_STATE_OVERVOLTAGE,
+    BMS_ERROR_STATE_UNDERVOLTAGE,
+    BMS_ERROR_STATE_TEMPERATURE_HIGH,
+    BMS_ERROR_STATE_TEMPERATURE_LOW,
+    BMS_ERROR_STATE_TEMPERATURE_CUT_OFF,
 };
 
 enum SAMPLE{
@@ -40,12 +44,13 @@ enum SAMPLE{
 
 #define SAMPLE_RANGE 8
 typedef struct nimh_bms{
-    uint16_t state;
+    uint8_t state;
+    uint8_t error_state_temp;
+    uint8_t error_state_volt;
     int16_t temperature;
     uint16_t voltage_mV;
     int16_t max_temp[2];
     int16_t min_temp[2];
-    int16_t avg_temp_slope[2];
     int16_t max_voltage[2];
     int16_t min_voltage[2];
     uint16_t timer;
@@ -57,5 +62,6 @@ void nimh_bms_read_voltage(uint16_t voltage);
 void nimh_bms_sample_range_tick();
 uint16_t nimh_bms_check_state();
 int16_t nimh_bms_check_temperature_state();
+uint8_t nimh_bms_check_bypass();
 
 #endif

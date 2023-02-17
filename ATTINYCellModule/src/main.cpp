@@ -305,7 +305,7 @@ void BalanceTimer()
   if (InterruptCounter <= PP.PWMSetPoint)
   {
     // Enable the pin
-    // diyBMSHAL::DumpLoadOn();
+    diyBMSHAL::DumpLoadOn();
 
     // Count the number of "on" periods, so we can calculate the amount of
     // energy consumed
@@ -509,7 +509,8 @@ void loop()
   }
 
   // Only enter bypass if the board temperature is below safety
-  if (PP.BypassCheck() && internal_temperature < DIYBMS_MODULE_SafetyTemperatureCutoff)
+  if (nimh_bms_check_bypass() && internal_temperature < DIYBMS_MODULE_SafetyTemperatureCutoff)
+  // if (PP.BypassCheck() && internal_temperature < DIYBMS_MODULE_SafetyTemperatureCutoff)
   {
     // Our cell voltage is OVER the voltage setpoint limit, start draining cell using bypass resistor
 
