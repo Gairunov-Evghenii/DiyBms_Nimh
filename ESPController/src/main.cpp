@@ -1130,9 +1130,9 @@ void LoadConfiguration()
   mysettings.totalNumberOfSeriesModules = 1;
   mysettings.BypassOverTempShutdown = 65;
   //4.10V bypass
-  mysettings.BypassThresholdmV = 4100;
-  mysettings.graph_voltagehigh = 4.5;
-  mysettings.graph_voltagelow = 2.75;
+  mysettings.BypassThresholdmV = 8400;
+  mysettings.graph_voltagehigh = 8.4;
+  mysettings.graph_voltagelow = 6.0;
 
   //EEPROM settings are invalid so default configuration
   mysettings.mqtt_enabled = false;
