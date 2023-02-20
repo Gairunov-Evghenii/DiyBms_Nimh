@@ -47,8 +47,6 @@ typedef struct nimh_bms{
     uint8_t state;
     uint8_t error_state_temp;
     uint8_t error_state_volt;
-    int16_t temperature;
-    uint16_t voltage_mV;
     int16_t max_temp[2];
     int16_t min_temp[2];
     int16_t max_voltage[2];

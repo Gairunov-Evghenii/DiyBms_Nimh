@@ -17,8 +17,6 @@ void nimh_bms_init()
         bms.state = BMS_STATE_INITIALIZED;
         bms.error_state_temp = BMS_ERROR_STATE_NONE;
         bms.error_state_volt = BMS_ERROR_STATE_NONE;
-        bms.temperature = 0;
-        bms.voltage_mV = 0;
         for (uint8_t u = 0; u < 2; u++)
         {
             bms.max_temp[u] = 0;
@@ -48,33 +46,30 @@ void nimh_bms_read_temperature(uint16_t temp)
         bms.max_temp[CURREN] = temperature;
         bms.min_temp[CURREN] = temperature;
     }
-    bms.temperature = temperature;
 
-    if (bms.temperature > bms.max_temp[CURREN])
+    if (temperature > bms.max_temp[CURREN])
     {
-        bms.max_temp[CURREN] = bms.temperature;
+        bms.max_temp[CURREN] = temperature;
     }
-    if (bms.temperature < bms.min_temp[CURREN])
+    if (temperature < bms.min_temp[CURREN])
     {
-        bms.min_temp[CURREN] = bms.temperature;
+        bms.min_temp[CURREN] = temperature;
     }
 }
 
 void nimh_bms_read_voltage(uint16_t voltage)
 {
-    bms.voltage_mV = voltage;
-
     if (bms.timer % SAMPLE_RANGE == 1)
     {
         bms.max_voltage[CURREN] = voltage;
         bms.min_voltage[CURREN] = voltage;
     }
 
-    if(bms.voltage_mV > bms.max_voltage[CURREN]){
-        bms.max_voltage[CURREN] = bms.voltage_mV;
+    if(voltage > bms.max_voltage[CURREN]){
+        bms.max_voltage[CURREN] = voltage;
     }
-    if(bms.voltage_mV < bms.min_voltage[CURREN]){
-        bms.min_voltage[CURREN] = bms.voltage_mV;
+    if(voltage < bms.min_voltage[CURREN]){
+        bms.min_voltage[CURREN] = voltage;
     }
 }
 
@@ -85,17 +80,11 @@ void nimh_bms_sample_range_tick()
         return;
     }
 
-    if (bms.timer == SAMPLE_RANGE)
-    {
-        nimh_bms_shift_samples();
-        return;
-    }
-
     bms.error_state_temp = nimh_bms_get_temperature_state();
     bms.error_state_volt = nimh_bms_get_voltage_state();
-    if(bms.error_state_temp != BMS_ERROR_STATE_NONE || bms.error_state_volt != BMS_ERROR_STATE_NONE){
-        bms.state = BMS_STATE_CRITICAL;
-    }
+    // if(bms.error_state_temp != BMS_ERROR_STATE_NONE || bms.error_state_volt != BMS_ERROR_STATE_NONE){
+    //     bms.state = BMS_STATE_CRITICAL;
+    // }
 
     switch (bms.state)
     {
@@ -169,7 +158,7 @@ int16_t nimh_bms_check_temperature_state()
 }
 
 uint8_t nimh_bms_check_bypass(){
-    return (bms.state == BMS_STATE_CHARGED || bms.error_state_volt == BMS_ERROR_STATE_OVERVOLTAGE);
+    return ((bms.state == BMS_STATE_CHARGED) || (bms.error_state_volt == BMS_ERROR_STATE_OVERVOLTAGE));
 }
 
 static uint8_t nimh_bms_get_temperature_state()
