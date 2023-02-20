@@ -91,6 +91,12 @@ void nimh_bms_sample_range_tick()
         return;
     }
 
+    bms.error_state_temp = nimh_bms_get_temperature_state();
+    bms.error_state_volt = nimh_bms_get_voltage_state();
+    if(bms.error_state_temp != BMS_ERROR_STATE_NONE || bms.error_state_volt != BMS_ERROR_STATE_NONE){
+        bms.state = BMS_STATE_CRITICAL;
+    }
+
     switch (bms.state)
     {
     case BMS_STATE_CRITICAL:
@@ -137,12 +143,6 @@ void nimh_bms_sample_range_tick()
     
     default:
         break;
-    }
-
-    bms.error_state_temp = nimh_bms_get_temperature_state();
-    bms.error_state_volt = nimh_bms_get_voltage_state();
-    if(bms.error_state_temp != BMS_ERROR_STATE_NONE || bms.error_state_volt != BMS_ERROR_STATE_NONE){
-        bms.state = BMS_STATE_CRITICAL;
     }
 
     nimh_bms_shift_samples();
