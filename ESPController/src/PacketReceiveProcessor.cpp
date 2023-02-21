@@ -1,5 +1,8 @@
 #include "PacketReceiveProcessor.h"
 
+#include "nimh_bms.h"
+
+
 bool PacketReceiveProcessor::HasCommsTimedOut()
 {
   //We timeout the comms if we don't receive a packet within 3 times the normal
@@ -302,6 +305,8 @@ void PacketReceiveProcessor::ProcessReplyNimhState(){
   for (uint8_t i = _packetbuffer.start_address; i <= _packetbuffer.end_address; i++)
   {
     cmi[i].nimhState = _packetbuffer.moduledata[q];
+    
+    nimh_bms_check_state(cmi[i].nimhState, i);
     #if defined(MY_DEBUGG)
       SERIAL_DEBUG.printf("Nimh State %d\n", cmi[i].nimhState);
     #endif

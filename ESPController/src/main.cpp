@@ -57,6 +57,8 @@ HAL_ESP8266 hal;
 
 #include "Rules.h"
 
+#include "nimh_bms.h"
+
 bool mqtt_connected = false;
 void sendMqttPacket();
 
@@ -624,6 +626,7 @@ void timerEnqueueCallback()
     prg.sendCellInternalTemperatureRequest(startmodule, endmodule);
     prg.sendNimhStateRequest(startmodule, endmodule);
     prg.sendNimhTemperatureSlopeRequest(startmodule, endmodule);
+    
     if(mqtt_connected){
       sendMqttPacket();
     }
@@ -1440,6 +1443,11 @@ void TerminalBasedWifiSetup(HardwareSerial stream)
   delay(5000);
   ESP.restart();
 }
+
+void set_realy_output_state_wrapper(uint8_t pin, uint8_t state){
+  hal.SetOutputState(pin, (RelayState) state);
+}
+
 void setup()
 {
   WiFi.mode(WIFI_OFF);
@@ -1603,6 +1611,8 @@ void setup()
     //Attempt connection in setup(), loop() will also try every 30 seconds
     connectToWifi();
   }
+
+  nimh_bms_init(TotalNumberOfCells, set_realy_output_state_wrapper);
 }
 
 unsigned long wifitimer = 0;

@@ -40,6 +40,8 @@ https://creativecommons.org/licenses/by-nc-sa/2.0/uk/
 
 #include "settings.h"
 
+#include "nimh_bms.h"
+
 AsyncWebServer *DIYBMSServer::_myserver;
 String DIYBMSServer::UUIDString;
 
@@ -941,6 +943,27 @@ void DIYBMSServer::PrintStreamComma(AsyncResponseStream *response, const __Flash
   response->print(',');
 }
 
+void DIYBMSServer::monitor_nimh_bms(AsyncWebServerRequest *request){
+  uint8_t totalModules = _mysettings->totalNumberOfBanks * _mysettings->totalNumberOfSeriesModules;
+  const char comma = ',';
+  const char *null = "null";
+  nimh_bms bms = nih_bms_get_struct();
+
+  AsyncResponseStream *response = request->beginResponseStream("application/json");
+
+  PrintStreamComma(response, F("{\"state\":"), bms.state);
+  PrintStreamComma(response, F("\"error_state_temp\":"), bms.error_state_temp);
+  PrintStreamComma(response, F("\"error_state_volt\":"), bms.error_state_volt);
+  PrintStreamComma(response, F("\"relay_charger_state\":"), bms.relay_charger_state);
+  PrintStreamComma(response, F("\"relay_load_state\":"), bms.relay_load_state);
+  response->print("\"module_count\":");
+  response->print(bms.module_count);
+  response->print('}');
+  request->send(response);
+
+
+}
+
 void DIYBMSServer::monitor2(AsyncWebServerRequest *request)
 {
   uint8_t totalModules = _mysettings->totalNumberOfBanks * _mysettings->totalNumberOfSeriesModules;
@@ -1415,6 +1438,7 @@ void DIYBMSServer::StartServer(AsyncWebServer *webserver,
 
 
   //Read endpoints
+  _myserver->on("/nimh_bms.json", HTTP_GET, DIYBMSServer::monitor_nimh_bms);
   _myserver->on("/monitor2.json", HTTP_GET, DIYBMSServer::monitor2);
   _myserver->on("/monitor3.json", HTTP_GET, DIYBMSServer::monitor3);
   _myserver->on("/integration.json", HTTP_GET, DIYBMSServer::integration);
