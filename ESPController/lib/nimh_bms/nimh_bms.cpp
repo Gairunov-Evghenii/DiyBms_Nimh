@@ -50,11 +50,14 @@ void nimh_bms_check_state(uint16_t states, uint8_t current_module)
 
     if(bms.error_state_temp == BMS_ERROR_STATE_TEMPERATURE_HIGH || bms.error_state_temp == BMS_ERROR_STATE_TEMPERATURE_CUT_OFF || bms.error_state_volt == BMS_ERROR_STATE_OVERVOLTAGE){
         bms.relay_charger_state = RELAY_STATE_OFF;
-    }else if(bms.error_state_volt == BMS_ERROR_STATE_UNDERVOLTAGE){
-        bms.relay_load_state == RELAY_STATE_OFF;
-    }else{
+    }else {
         bms.relay_charger_state = RELAY_STATE_ON;
-        bms.relay_load_state == RELAY_STATE_ON;
+    }
+        
+    if(bms.error_state_volt == BMS_ERROR_STATE_UNDERVOLTAGE){
+        bms.relay_load_state = RELAY_STATE_OFF;
+    }else{
+        bms.relay_load_state = RELAY_STATE_ON;
     }
     update_realy_state();
 
