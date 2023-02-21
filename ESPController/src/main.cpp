@@ -1168,17 +1168,17 @@ void LoadConfiguration()
   //Internal BMS error (communication issues, fault readings from modules etc)
   mysettings.rulevalue[Rule::BMSError] = 0;
   //Individual cell over voltage
-  mysettings.rulevalue[Rule::Individualcellovervoltage] = 4150;
+  mysettings.rulevalue[Rule::Individualcellovervoltage] = 8400;
   //Individual cell under voltage
-  mysettings.rulevalue[Rule::Individualcellundervoltage] = 3000;
+  mysettings.rulevalue[Rule::Individualcellundervoltage] = 6000;
   //Individual cell over temperature (external probe)
   mysettings.rulevalue[Rule::IndividualcellovertemperatureExternal] = 55;
   //Pack over voltage (mV)
   mysettings.rulevalue[Rule::IndividualcellundertemperatureExternal] = 5;
   //Pack under voltage (mV)
-  mysettings.rulevalue[Rule::PackOverVoltage] = 4200 * 8;
+  mysettings.rulevalue[Rule::PackOverVoltage] = 8400 * 8;
   //RULE_PackUnderVoltage
-  mysettings.rulevalue[Rule::PackUnderVoltage] = 3000 * 8;
+  mysettings.rulevalue[Rule::PackUnderVoltage] = 6000 * 8;
   mysettings.rulevalue[Rule::Timer1] = 60 * 8;  //8am
   mysettings.rulevalue[Rule::Timer2] = 60 * 17; //5pm
 
