@@ -1444,8 +1444,12 @@ void TerminalBasedWifiSetup(HardwareSerial stream)
   ESP.restart();
 }
 
-void set_realy_output_state_wrapper(uint8_t pin, uint8_t state){
-  hal.SetOutputState(pin, (RelayState) state);
+void Relay_On_Wrapper(uint8_t pin){
+  hal.SetOutputState(pin, RELAY_ON);
+}
+
+void Relay_Off_Wrapper(uint8_t pin){
+  hal.SetOutputState(pin, RELAY_OFF);
 }
 
 void setup()
@@ -1612,7 +1616,7 @@ void setup()
     connectToWifi();
   }
 
-  nimh_bms_init(TotalNumberOfCells, set_realy_output_state_wrapper);
+  nimh_bms_init(TotalNumberOfCells, Relay_On_Wrapper, Relay_Off_Wrapper, &SERIAL_DEBUG);
 }
 
 unsigned long wifitimer = 0;

@@ -2,9 +2,16 @@
 #define NIHM_BMS_H_
 
 #include <stdint.h>
+#include <stddef.h>
+#include <HardwareSerial.h>
 
-#define relay_charger_state_PIN 0
-#define relay_load_state_PIN 1
+#define RELAY_CHARGER_PIN 0
+#define RELAY_LOAD_PIN 1
+
+enum RELAY_STATE {
+    RELAY_STATE_OFF = 0,
+    RELAY_STATE_ON = 1
+};
 
 enum BMS_STATE {
     BMS_STATE_CRITICAL = 0,
@@ -33,7 +40,9 @@ typedef struct nimh_bms{
 }nimh_bms;
 
 void nimh_bms_init(uint16_t (*get_module_count_Ptr)(),
-void (*change_relay_state_Ptr)(uint8_t, uint8_t)
+void (*relay_on)(uint8_t pin),
+void (*relay_off)(uint8_t pin),
+HardwareSerial * serial
 );
 void nimh_bms_check_state(uint16_t states, uint8_t current_module);
 nimh_bms nih_bms_get_struct();
