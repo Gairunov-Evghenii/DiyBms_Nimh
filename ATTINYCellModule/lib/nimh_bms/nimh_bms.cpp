@@ -8,7 +8,7 @@ static void nimh_bms_shift_samples();
 static inline uint8_t nimh_bms_dT_dt();
 static inline uint8_t is_temperature_increasing();
 
-nimh_bms bms;
+nimh_bms bms = {};
 
 void nimh_bms_init()
 {
