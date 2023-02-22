@@ -1616,7 +1616,7 @@ void setup()
     connectToWifi();
   }
 
-  nimh_bms_init(TotalNumberOfCells, Relay_On_Wrapper, Relay_Off_Wrapper, &SERIAL_DEBUG);
+  nimh_bms_init(TotalNumberOfCells, Relay_On_Wrapper, Relay_Off_Wrapper);
 }
 
 unsigned long wifitimer = 0;

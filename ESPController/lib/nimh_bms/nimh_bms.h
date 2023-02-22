@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <HardwareSerial.h>
 
 #define RELAY_CHARGER_PIN 0
 #define RELAY_LOAD_PIN 1
@@ -41,8 +40,7 @@ typedef struct nimh_bms{
 
 void nimh_bms_init(uint16_t (*get_module_count_Ptr)(),
 void (*relay_on)(uint8_t pin),
-void (*relay_off)(uint8_t pin),
-HardwareSerial * serial
+void (*relay_off)(uint8_t pin)
 );
 void nimh_bms_check_state(uint16_t states, uint8_t current_module);
 nimh_bms nih_bms_get_struct();
