@@ -176,12 +176,12 @@ static uint8_t nimh_bms_get_temperature_state()
 
 static uint8_t nimh_bms_get_voltage_state()
 {
-    if (bms.min_voltage[CURREN] < VOLTAGE_LOW)
+    if (bms.max_voltage[CURREN] < VOLTAGE_LOW)
     {
         return BMS_ERROR_STATE_UNDERVOLTAGE;
     }
 
-    if (bms.max_voltage[CURREN] > VOLTAGE_HIGH)
+    if (bms.min_voltage[CURREN] > VOLTAGE_HIGH)
     {
         return BMS_ERROR_STATE_OVERVOLTAGE;
     }
