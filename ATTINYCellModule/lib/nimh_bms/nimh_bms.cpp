@@ -144,16 +144,9 @@ uint16_t nimh_bms_check_state()
 
 int16_t nimh_bms_check_temperature_state()
 {
-    if(bms.timer <= SAMPLE_RANGE){
     return (
         (((uint8_t)(bms.max_temp[CURREN] - 150))<<8)|
         ((uint8_t)(bms.min_temp[CURREN] - 150))
-    );
-    }
-
-    return (
-        (((uint8_t)(bms.max_temp[PREVIOUS] - 150))<<8)|
-        ((uint8_t)(bms.min_temp[PREVIOUS] - 150))
     );
 }
 
