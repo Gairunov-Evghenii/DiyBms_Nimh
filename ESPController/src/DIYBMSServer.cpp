@@ -951,11 +951,20 @@ void DIYBMSServer::monitor_nimh_bms(AsyncWebServerRequest *request){
 
   AsyncResponseStream *response = request->beginResponseStream("application/json");
 
-  PrintStreamComma(response, F("{\"state\":"), bms.state);
-  PrintStreamComma(response, F("\"error_state_temp\":"), bms.error_state_temp);
-  PrintStreamComma(response, F("\"error_state_volt\":"), bms.error_state_volt);
-  PrintStreamComma(response, F("\"relay_charger_state\":"), bms.relay_charger_state);
-  PrintStreamComma(response, F("\"relay_load_state\":"), bms.relay_load_state);
+  response->print(F("{\"states\":["));
+  for (size_t i = 0; i < bms.module_count; i++)
+  {
+      if (i){
+        response->print(comma);
+      }
+      response->print(bms.states[i]);
+  }
+
+  response->print("],");
+
+
+  PrintStreamComma(response, F("\"disable_charger\":"), bms.disable_charger);
+  PrintStreamComma(response, F("\"disable_load\":"), bms.disable_load);
   response->print("\"module_count\":");
   response->print(bms.module_count);
   response->print('}');

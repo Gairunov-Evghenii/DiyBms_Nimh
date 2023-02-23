@@ -7,11 +7,6 @@
 #define RELAY_CHARGER_PIN 0
 #define RELAY_LOAD_PIN 1
 
-enum RELAY_STATE {
-    RELAY_STATE_OFF = 0,
-    RELAY_STATE_ON = 1
-};
-
 enum BMS_STATE {
     BMS_STATE_CRITICAL = 0,
     BMS_STATE_INITIALIZED,
@@ -29,13 +24,13 @@ enum BMS_ERROR_STATE {
     BMS_ERROR_STATE_TEMPERATURE_LOW,
     BMS_ERROR_STATE_TEMPERATURE_CUT_OFF,
 };
+
+#define MAX_MODULE_COUNT 100
 typedef struct nimh_bms{
-    uint8_t state;
-    uint8_t error_state_temp;
-    uint8_t error_state_volt;
+    uint16_t states[MAX_MODULE_COUNT];
     uint8_t module_count;
-    uint8_t relay_charger_state;
-    uint8_t relay_load_state;
+    uint8_t disable_charger;
+    uint8_t disable_load;
 }nimh_bms;
 
 void nimh_bms_init(uint16_t (*get_module_count_Ptr)(),
