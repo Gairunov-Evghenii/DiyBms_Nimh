@@ -10,7 +10,7 @@
     #define VOLTAGE_LOW (1150*(NUMBER_OF_CELLS-1) - 200)
 #endif
 
-#define VOLTAGE_HIGH (1400 * NUMBER_OF_CELLS)
+#define VOLTAGE_HIGH (1465 * NUMBER_OF_CELLS)
 
 #define TEMPERATURE_CUT_OFF 400
 #define TEMPERATURE_LOW 100
@@ -42,7 +42,7 @@ enum SAMPLE{
     PREVIOUS
 };
 
-#define SAMPLE_RANGE 8
+#define SAMPLE_RANGE 32
 typedef struct nimh_bms{
     uint8_t state;
     uint8_t error_state_temp;

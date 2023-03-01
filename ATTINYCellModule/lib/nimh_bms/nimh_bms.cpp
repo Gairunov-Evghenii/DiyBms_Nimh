@@ -139,7 +139,10 @@ void nimh_bms_sample_range_tick()
 
 uint16_t nimh_bms_check_state()
 {
-    return (uint8_t)bms.state | (((uint8_t)bms.error_state_temp & 0xf) | ((uint8_t)bms.error_state_volt) << 4)<<8;
+    uint16_t tmp = bms.state & 0xf;
+    tmp |= ((bms.error_state_temp & 0xf) << 8);
+    tmp |= ((bms.error_state_volt & 0xf) << 12);
+    return tmp;
 }
 
 int16_t nimh_bms_check_temperature_state()
