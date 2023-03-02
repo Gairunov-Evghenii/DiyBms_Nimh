@@ -624,8 +624,8 @@ void timerEnqueueCallback()
     // prg.sendCellTemperatureRequest(startmodule, endmodule);
     prg.sendCellExternalTemperatureRequest(startmodule, endmodule);
     prg.sendCellInternalTemperatureRequest(startmodule, endmodule);
-    prg.sendNimhStateRequest(startmodule, endmodule);
-    prg.sendNimhTemperatureSlopeRequest(startmodule, endmodule);
+    // prg.sendNimhStateRequest(startmodule, endmodule);
+    // prg.sendNimhTemperatureSlopeRequest(startmodule, endmodule);
     
     if(mqtt_connected){
       sendMqttPacket();
