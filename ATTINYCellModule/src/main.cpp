@@ -97,7 +97,7 @@ void DefaultConfig()
 
   // Start bypass at 4.1V
   //myConfig.BypassThresholdmV = 4100;
-  myConfig.BypassThresholdmV = VOLTAGE_HIGH;
+  myConfig.BypassThresholdmV = 8800;
 
   //#if defined(DIYBMSMODULEVERSION) && (DIYBMSMODULEVERSION == 430 || DIYBMSMODULEVERSION == 420 || DIYBMSMODULEVERSION == 421)
   // Murata Electronics NCP18WB473J03RB = 47K ±5% 4050K ±2% 100mW 0603 NTC Thermistors RoHS
@@ -283,7 +283,7 @@ void setup()
   Serial.begin(DIYBMSBAUD, SERIAL_8N1);
 
   myPacketSerial.begin(&Serial, &onPacketReceived, sizeof(PacketStruct), SerialPacketReceiveBuffer, sizeof(SerialPacketReceiveBuffer));
-  nimh_bms_init();
+  nimh_bms_init(myConfig.BypassThresholdmV);
 }
 
 void BalanceTimer()
@@ -406,6 +406,7 @@ void loop()
     // The configuration has just been modified so stop balancing if we are and
     // reset our status
     StopBalance();
+    nimh_bms_init(myConfig.BypassThresholdmV);
   }
 
   if (wdt_triggered)
