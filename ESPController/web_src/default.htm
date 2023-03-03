@@ -224,6 +224,26 @@
                         <input type="number" min="6000" max="9000" step="10" name="BypassThresholdmV" id="g2"
                             value="8400" required="">
                     </div>
+                    <div>
+                        <label for="g3">Min Temperature /10</label>
+                        <input type="number" min="-100" max="500" step="1" name="min_temperature" id="g3"
+                            value="100" required="">
+                    </div>
+                    <div>
+                        <label for="g4">Max Temperature /10</label>
+                        <input type="number" min="-100" max="500" step="1" name="max_temperature" id="g4"
+                            value="350" required="">
+                    </div>
+                    <div>
+                        <label for="g5">Min Voltage mV</label>
+                        <input type="number" min="1000" max="10000" step="1" name="min_voltage" id="g5"
+                            value="6000" required="">
+                    </div>
+                    <div>
+                        <label for="g6">Max Voltage mV</label>
+                        <input type="number" min="1000" max="10000" step="1" name="max_voltage" id="g6"
+                            value="8800" required="">
+                    </div>
                 </div>
                 <input id="globalSettingsButton" type="submit" value="Save settings" />
             </form>

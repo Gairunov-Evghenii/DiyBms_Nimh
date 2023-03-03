@@ -765,6 +765,10 @@ $(function () {
             function (data) {
                 $("#g1").val(data.settings.bypassovertemp);
                 $("#g2").val(data.settings.bypassthreshold);
+                $("#g3").val(data.settings.min_temperature);
+                $("#g4").val(data.settings.max_temperature);
+                $("#g5").val(data.settings.min_voltage);
+                $("#g6").val(data.settings.max_voltage);
 
                 $("#modulesPage").show();
             }).fail(function () { }

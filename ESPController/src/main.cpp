@@ -1137,6 +1137,11 @@ void LoadConfiguration()
   mysettings.graph_voltagehigh = 8.4;
   mysettings.graph_voltagelow = 6.0;
 
+  mysettings.min_admisible_temperature = 10;
+  mysettings.max_admisible_temperature = 35;
+  mysettings.min_admisble_voltage = 6000;
+  mysettings.max_admisible_voltage = 8800;
+
   //EEPROM settings are invalid so default configuration
   mysettings.mqtt_enabled = false;
   mysettings.mqtt_port = 1883;

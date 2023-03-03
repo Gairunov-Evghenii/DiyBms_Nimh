@@ -498,7 +498,10 @@ void DIYBMSServer::saveGlobalSetting(AsyncWebServerRequest *request)
   if (!validateXSS(request))
     return;
 
-  if (request->hasParam("BypassOverTempShutdown", true) && request->hasParam("BypassThresholdmV", true))
+  if (request->hasParam("BypassOverTempShutdown", true) && request->hasParam("BypassThresholdmV", true) &&
+      request->hasParam("min_temperature", true) && request->hasParam("max_temperature", true) &&
+      request->hasParam("min_voltage", true) && request->hasParam("max_voltage", true)
+  )
   {
 
     AsyncWebParameter *p1 = request->getParam("BypassOverTempShutdown", true);
@@ -506,6 +509,21 @@ void DIYBMSServer::saveGlobalSetting(AsyncWebServerRequest *request)
 
     AsyncWebParameter *p2 = request->getParam("BypassThresholdmV", true);
     _mysettings->BypassThresholdmV = p2->value().toInt();
+
+    AsyncWebParameter *p3 = request->getParam("min_temperature", true);
+    _mysettings->min_admisible_temperature = p3->value().toInt();
+
+    AsyncWebParameter *p7 = request->getParam("min_temperature", true);
+    _mysettings->min_admisible_temperature = p7->value().toInt();
+
+    AsyncWebParameter *p4 = request->getParam("max_temperature", true);
+    _mysettings->max_admisible_temperature = p4->value().toInt();
+
+    AsyncWebParameter *p5 = request->getParam("min_voltage", true);
+    _mysettings->min_admisble_voltage = p5->value().toInt();
+
+    AsyncWebParameter *p6 = request->getParam("max_voltage", true);
+    _mysettings->max_admisible_voltage = p6->value().toInt();
 
     saveConfiguration();
 
@@ -708,6 +726,11 @@ void DIYBMSServer::settings(AsyncWebServerRequest *request)
 
   settings["bypassthreshold"] = _mysettings->BypassThresholdmV;
   settings["bypassovertemp"] = _mysettings->BypassOverTempShutdown;
+
+  settings["min_temperature"] = _mysettings->min_admisible_temperature;
+  settings["max_temperature"] = _mysettings->max_admisible_temperature;
+  settings["min_voltage"] = _mysettings->min_admisble_voltage;
+  settings["max_voltage"] = _mysettings->max_admisible_voltage;
 
   settings["NTPServerName"] = _mysettings->ntpServer;
   settings["TimeZone"] = _mysettings->timeZone;

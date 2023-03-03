@@ -83,6 +83,11 @@ struct diybms_eeprom_settings
   uint8_t BypassOverTempShutdown;
   uint16_t BypassThresholdmV;
 
+  int16_t min_admisible_temperature;
+  int16_t max_admisible_temperature;
+  uint16_t min_admisble_voltage;
+  uint16_t max_admisible_voltage;
+
   int8_t timeZone;        // = 0;
   int8_t minutesTimeZone; // = 0;
   bool daylight;          //=false;
