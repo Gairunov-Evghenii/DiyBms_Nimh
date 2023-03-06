@@ -970,26 +970,40 @@ void DIYBMSServer::monitor_nimh_bms(AsyncWebServerRequest *request){
   uint8_t totalModules = _mysettings->totalNumberOfBanks * _mysettings->totalNumberOfSeriesModules;
   const char comma = ',';
   const char *null = "null";
-  nimh_bms bms = nih_bms_get_struct();
+  static nimh_bms* bms = nih_bms_get_struct();
 
   AsyncResponseStream *response = request->beginResponseStream("application/json");
 
-  response->print(F("{\"states\":["));
-  for (size_t i = 0; i < bms.module_count; i++)
+  PrintStreamComma(response, F("{\"disable_charger\":"), bms->disable_charger);
+  PrintStreamComma(response, F("\"disable_load\":"), bms->disable_load);
+  PrintStreamComma(response, F("\"module_count\":"), bms->module_count);
+
+
+
+
+  response->print(F("\"module_states\":["));
+  for (size_t i = 0; i < bms->module_count; i++)
   {
       if (i){
         response->print(comma);
       }
-      response->print(bms.states[i]);
+      response->print("[");
+      response->print(nimh_decode_state(bms->cell[i].state));
+      response->print(comma);
+      response->print(nimh_decode_error_state(bms->cell[i].error_state_volt));
+      response->print(comma);
+      response->print(nimh_decode_error_state(bms->cell[i].error_state_temp));
+      response->print(comma);
+      response->print("{");
+        PrintStreamComma(response, F("\"max_temp\":"), bms->cell[i].max_temp[CURREN]);
+        PrintStreamComma(response, F("\"min_temp\":"), bms->cell[i].min_temp[CURREN]);
+        PrintStreamComma(response, F("\"max_voltage\":"), bms->cell[i].max_voltage[CURREN]);
+        response->printf("\"min_voltage\": %d", bms->cell[i].min_voltage[CURREN]);
+      response->print("}");
+      response->print("]");
   }
 
-  response->print("],");
-
-
-  PrintStreamComma(response, F("\"disable_charger\":"), bms.disable_charger);
-  PrintStreamComma(response, F("\"disable_load\":"), bms.disable_load);
-  response->print("\"module_count\":");
-  response->print(bms.module_count);
+  response->print("]");
   response->print('}');
   request->send(response);
 
