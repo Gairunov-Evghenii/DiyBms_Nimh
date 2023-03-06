@@ -100,7 +100,7 @@ void nimh_bms_sample_range_tick()
     break;
 
     case BMS_STATE_CHARGED:
-        if(!is_temperature_increasing() && is_voltage_increasing()){
+        if(!is_temperature_increasing() && !is_voltage_increasing()){
             bms.state = BMS_STATE_DISCHARGING;
         }
     break;
