@@ -526,6 +526,10 @@ void DIYBMSServer::saveGlobalSetting(AsyncWebServerRequest *request)
     _mysettings->max_admisible_voltage = p6->value().toInt();
 
     saveConfiguration();
+    nimh_bms_set_limits(_mysettings->max_admisible_voltage, 
+                      _mysettings->min_admisble_voltage, 
+                      _mysettings->max_admisible_temperature, 
+                      _mysettings->min_admisible_temperature);
 
     _prg->sendSaveGlobalSetting(_mysettings->BypassThresholdmV, _mysettings->BypassOverTempShutdown);
 
@@ -977,9 +981,10 @@ void DIYBMSServer::monitor_nimh_bms(AsyncWebServerRequest *request){
   PrintStreamComma(response, F("{\"disable_charger\":"), bms->disable_charger);
   PrintStreamComma(response, F("\"disable_load\":"), bms->disable_load);
   PrintStreamComma(response, F("\"module_count\":"), bms->module_count);
-
-
-
+  PrintStreamComma(response, F("\"upper_voltage_limit\":"), bms->upper_voltage_limit);
+  PrintStreamComma(response, F("\"lower_voltage_limit\":"), bms->lower_voltage_limit);
+  PrintStreamComma(response, F("\"upper_temperature_limit\":"), bms->upper_temperature_limit);
+  PrintStreamComma(response, F("\"lower_temperature_limit\":"), bms->lower_temperature_limit);
 
   response->print(F("\"module_states\":["));
   for (size_t i = 0; i < bms->module_count; i++)

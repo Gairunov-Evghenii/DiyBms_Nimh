@@ -1622,6 +1622,10 @@ void setup()
   }
 
   nimh_bms_init(TotalNumberOfCells, Relay_On_Wrapper, Relay_Off_Wrapper);
+  nimh_bms_set_limits(mysettings.max_admisible_voltage, 
+                    mysettings.min_admisble_voltage, 
+                    mysettings.max_admisible_temperature, 
+                    mysettings.min_admisible_temperature);
 }
 
 unsigned long wifitimer = 0;
