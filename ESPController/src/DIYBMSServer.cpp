@@ -1000,6 +1000,7 @@ void DIYBMSServer::monitor_nimh_bms(AsyncWebServerRequest *request){
       response->print(nimh_decode_error_state(bms->cell[i].error_state_temp));
       response->print(comma);
       response->print("{");
+        PrintStreamComma(response, F("\"timer\":"), bms->cell[i].timer % SAMPLE_RANGE);
         PrintStreamComma(response, F("\"max_temp\":"), bms->cell[i].max_temp[CURREN]);
         PrintStreamComma(response, F("\"min_temp\":"), bms->cell[i].min_temp[CURREN]);
         PrintStreamComma(response, F("\"max_voltage\":"), bms->cell[i].max_voltage[CURREN]);

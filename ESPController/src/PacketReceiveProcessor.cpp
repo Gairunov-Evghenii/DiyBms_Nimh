@@ -183,6 +183,7 @@ void PacketReceiveProcessor::ProcessReplyExternalTemperature(){
     }else{
       cmi[i].externalTemp = _packetbuffer.moduledata[q];
     }
+    nimh_bms_read_temperature(cmi[i].externalTemp, i);
     #if defined(MY_DEBUGG)
       SERIAL_DEBUG.printf("externalTemp %d\n", cmi[i].externalTemp);
     #endif
@@ -239,6 +240,7 @@ void PacketReceiveProcessor::ProcessReplyVoltage()
     // Y = Bypass over temperature
 
     cellptr->voltagemV = _packetbuffer.moduledata[i] & 0x3FFF;
+    nimh_bms_read_voltage(cellptr->voltagemV, _packetbuffer.start_address + i);
     #if defined(MY_DEBUGG)
       SERIAL_DEBUG.printf("voltagemV %d\n", cellptr->voltagemV);
     #endif

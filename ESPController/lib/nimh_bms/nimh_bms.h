@@ -32,7 +32,7 @@ enum SAMPLE{
     PREVIOUS
 };
 
-#define SAMPLE_RANGE 64
+#define SAMPLE_RANGE 8
 typedef struct nimh_bms_cell{
     uint8_t state;
     uint8_t error_state_temp;
@@ -64,8 +64,8 @@ void (*relay_off)(uint8_t pin)
 void nimh_bms_set_limits(
     uint16_t upper_voltage_limit,
     uint16_t lower_voltage_limit,
-    int16_t lower_temperature_limit,
-    int16_t upper_temperature_limit);
+    int16_t upper_temperature_limit,
+    int16_t lower_temperature_limit);
 
 void nimh_bms_read_temperature(int16_t temperature, uint8_t module);
 void nimh_bms_read_voltage(uint16_t voltage, uint8_t module);

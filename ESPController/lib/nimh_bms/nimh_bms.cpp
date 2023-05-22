@@ -17,8 +17,8 @@ static uint8_t nimh_bms_get_voltage_state(uint8_t module);
 
 // takes the functions wich calculates the modules count
 void nimh_bms_init(uint16_t (*get_module_count_Ptr)(),
-void (*relay_on)(uint8_t pin),
-void (*relay_off)(uint8_t pin))
+                    void (*relay_on)(uint8_t pin),
+                    void (*relay_off)(uint8_t pin))
 {
     get_module_count_Function = get_module_count_Ptr;
     relay_on_Function = relay_on;
@@ -32,8 +32,8 @@ void (*relay_off)(uint8_t pin))
 void nimh_bms_set_limits(
     uint16_t upper_voltage_limit,
     uint16_t lower_voltage_limit,
-    int16_t lower_temperature_limit,
-    int16_t upper_temperature_limit)
+    int16_t upper_temperature_limit,
+    int16_t lower_temperature_limit)
 {
     bms.upper_voltage_limit = upper_voltage_limit;
     bms.lower_voltage_limit = lower_voltage_limit;
@@ -51,18 +51,20 @@ void nimh_bms_read_temperature(int16_t temperature, uint8_t module)
 
     if (bms.cell[module].timer % SAMPLE_RANGE == 1)
     {
-        bms.cell[module].max_temp[CURREN] = INT16_MIN;
-        bms.cell[module].min_temp[CURREN] = INT16_MAX;
+        bms.cell[module].max_temp[CURREN] = temperature;
+        bms.cell[module].min_temp[CURREN] = temperature;
     }
 
     if (temperature > bms.cell[module].max_temp[CURREN])
     {
         bms.cell[module].max_temp[CURREN] = temperature;
     }
+
     if (temperature < bms.cell[module].min_temp[CURREN])
     {
         bms.cell[module].min_temp[CURREN] = temperature;
     }
+    
     nimh_bms_sample_range_tick(module);
 }
 
@@ -104,7 +106,7 @@ static void nimh_bms_sample_range_tick(uint8_t module)
         return;
     }
     
-    if(bms.cell[module].timer > SAMPLE_RANGE){
+    if(bms.cell[module].state != BMS_STATE_INITIALIZED){
     uint8_t last_state = bms.cell[module].error_state_temp;
     bms.cell[module].error_state_temp = nimh_bms_get_temperature_state(module);
     if(last_state != bms.cell[module].error_state_temp && (bms.cell[module].state != BMS_STATE_INITIALIZED)){
