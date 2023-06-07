@@ -1,4 +1,4 @@
-# DIYMBS
+# DIYMBS  
 
 In cadrul acestui proiect au fost audse modificari proiectului DIYBMS pentru a permite sistemului sa motiroizeze baterii NIMH.
 
