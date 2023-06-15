@@ -40,6 +40,8 @@ typedef struct nimh_bms{
     uint16_t upper_voltage_limit;
 }nimh_bms;
 
+extern nimh_bms bms;
+
 void nimh_bms_init(uint16_t upper_voltage_limit);
 void nimh_bms_read_temperature(uint16_t temp);
 void nimh_bms_read_voltage(uint16_t voltage);

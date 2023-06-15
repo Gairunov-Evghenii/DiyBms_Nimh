@@ -103,6 +103,8 @@ public:
 
   static inline void NotificationLedOff() __attribute__((always_inline)) { PORTA.OUTCLR = PIN6_bm; }
 
+  static inline void NotificationLedSw() __attribute__((always_inline)) { PORTA.OUTTGL = PIN6_bm; }
+
   static inline void SpareToggle() __attribute__((always_inline)) { PORTA.OUTTGL = PIN2_bm; }
 
   static inline void SpareOn() __attribute__((always_inline)) { PORTA.OUTSET = PIN2_bm; }

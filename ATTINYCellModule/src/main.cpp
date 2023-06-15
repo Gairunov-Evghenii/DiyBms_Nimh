@@ -147,7 +147,7 @@ void onPacketReceived()
   if (PP.onPacketReceived((PacketStruct *)SerialPacketReceiveBuffer))
   {
     // Only light Notification if packet is good
-    diyBMSHAL::NotificationLedOn();
+//    diyBMSHAL::NotificationLedOn();
   }
 
   // Send the packet (fixed length!) (even if it was invalid so controller can
@@ -160,7 +160,7 @@ void onPacketReceived()
   // is empty.
   diyBMSHAL::FlushSerial0();
 
-  diyBMSHAL::NotificationLedOff();
+//  diyBMSHAL::NotificationLedOff();
 }
 
 // Kp: Determines how aggressively the PID reacts to the current amount of error
@@ -463,8 +463,12 @@ void loop()
   static uint64_t nimh_bms_last_read = 0;
   if(millis() - nimh_bms_last_read > READ_INTERVAL * 1000){
     nimh_bms_last_read = millis();
-    nimh_bms_read_temperature(PP.ExternalTemperature());
-    nimh_bms_read_voltage(PP.CellVoltage());
+    uint16_t ET=PP.ExternalTemperature();
+    uint16_t CV=PP.CellVoltage();
+    if (( CV > 8000 ) || ( CV < 6000 ) || ( ET > 250 )) diyBMSHAL::NotificationLedOn();
+    else diyBMSHAL::NotificationLedOff();
+    nimh_bms_read_temperature(ET);
+    nimh_bms_read_voltage(CV);
     nimh_bms_sample_range_tick();
   }
 
