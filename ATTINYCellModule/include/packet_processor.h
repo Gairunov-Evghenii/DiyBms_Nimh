@@ -17,6 +17,8 @@
 #include "settings.h"
 #include "crc16.h"
 
+#include "my_lib.h"
+
 #define ADC_CELL_VOLTAGE 0
 #define ADC_INTERNAL_TEMP 1
 #define ADC_EXTERNAL_TEMP 2

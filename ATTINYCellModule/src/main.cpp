@@ -61,6 +61,7 @@ https://trolsoft.ru/en/uart-calc
 #include "packet_processor.h"
 
 #include "nimh_bms.h"
+#include "my_lib.h"
 
 uint8_t SerialPacketReceiveBuffer[8 + sizeof(PacketStruct)];
 
@@ -284,6 +285,8 @@ void setup()
 
   myPacketSerial.begin(&Serial, &onPacketReceived, sizeof(PacketStruct), SerialPacketReceiveBuffer, sizeof(SerialPacketReceiveBuffer));
   nimh_bms_init(myConfig.BypassThresholdmV);
+  ML_limites.lim_voltage[MAX] = myConfig.BypassThresholdmV;
+  bat_my_lib.set_limites(&ML_limites, MAX_VOLTAGE_MASK);
 }
 
 void BalanceTimer()
@@ -407,6 +410,8 @@ void loop()
     // reset our status
     StopBalance();
     nimh_bms_init(myConfig.BypassThresholdmV);
+  ML_limites.lim_voltage[MAX] = myConfig.BypassThresholdmV;
+  bat_my_lib.set_limites(&ML_limites, MAX_VOLTAGE_MASK);
   }
 
   if (wdt_triggered)
@@ -459,17 +464,29 @@ void loop()
 #endif
   }
   
+  
   //nimh_bms code
   static uint64_t nimh_bms_last_read = 0;
   if(millis() - nimh_bms_last_read > READ_INTERVAL * 1000){
     nimh_bms_last_read = millis();
     uint16_t ET=PP.ExternalTemperature();
     uint16_t CV=PP.CellVoltage();
-    if (( CV > 8000 ) || ( CV < 6000 ) || ( ET > 250 )) diyBMSHAL::NotificationLedOn();
-    else diyBMSHAL::NotificationLedOff();
+//    if (( CV > 8000 ) || ( CV < 6000 ) || ( ET > 270 )) diyBMSHAL::NotificationLedOn();
+//    else diyBMSHAL::NotificationLedOff();
     nimh_bms_read_temperature(ET);
     nimh_bms_read_voltage(CV);
     nimh_bms_sample_range_tick();
+  }
+  
+
+  //MY_LIB processing
+  {
+    bat_my_lib.set_time(millis());
+    bat_my_lib.set_voltage(PP.CellVoltage());
+    bat_my_lib.set_temperature(PP.ExternalTemperature());
+    bat_my_lib.calc();
+    if(bat_my_lib.get_error_save())diyBMSHAL::NotificationLedOn();
+    else diyBMSHAL::NotificationLedOff();
   }
 
   // Switch reference off if we are not in bypass (otherwise leave on)

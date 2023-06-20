@@ -14,8 +14,11 @@ https://creativecommons.org/licenses/by-nc-sa/2.0/uk/
 
 #include "EmbeddedFiles_Defines.h"
 
+#define EXTENDED_COMMANDSET  32
+
 #ifndef DIYBMS_DEFINES_H // include guard
 #define DIYBMS_DEFINES_H
+#include "stdint.h"
 
 #if !defined(DIYBMSMODULEVERSION)
 #error You need to specify the DIYBMSMODULEVERSION define
@@ -32,7 +35,6 @@ https://creativecommons.org/licenses/by-nc-sa/2.0/uk/
 #if defined(__AVR_ATtinyx24__) || defined(__AVR_ATtinyx26__)
   #define CALIBRATION 11.0909
 #endif
-
 
 // Only the lowest 4 bits can be used!
 enum COMMAND: uint8_t
@@ -52,9 +54,15 @@ enum COMMAND: uint8_t
     ReadInternalTemperature=12,
     ReadExternalTemperature=13,
     DebugNimhState=14,
-    DebugNimhTemperatureSlope=15
-};
+    DebugNimhTemperatureSlope=15,
 
+#if defined(EXTENDED_COMMANDSET)
+    SetLimites=16,
+    GetLimites=17,
+    GetParameters=18,
+    ClearError=19,
+#endif
+};
 
 //Default values
 struct CellModuleConfig {

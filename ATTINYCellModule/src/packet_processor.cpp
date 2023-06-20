@@ -25,7 +25,7 @@ https://creativecommons.org/licenses/by-nc-sa/2.0/uk/
 */
 
 #include "packet_processor.h"
-#include "nimh_bms.h"
+//#include "nimh_bms.h"
 
 // Enable this for debug/testing a single module will pretend to be an entire bank of 16 modules
 // you are likely to get OOS errors when these are running in a string as the timings will be wrong
@@ -241,7 +241,11 @@ uint16_t PacketProcessor::CellVoltage()
 bool PacketProcessor::processPacket(PacketStruct *buffer)
 {
   uint8_t moduledata_index = mymoduleaddress % maximum_cell_modules;
+#if defined(EXTENDED_COMMANDSET)
+  switch (buffer->command & 0x1F)
+#else
   switch (buffer->command & 0x0F)
+#endif
   {
   case COMMAND::ResetBadPacketCounter:
     badpackets = 0;
@@ -429,15 +433,44 @@ bool PacketProcessor::processPacket(PacketStruct *buffer)
 
   case COMMAND::DebugNimhState:
   {
-    buffer->moduledata[moduledata_index] = nimh_bms_check_state();
+//    buffer->moduledata[moduledata_index] = nimh_bms_check_state();
     return true;
   }
 
   case COMMAND::DebugNimhTemperatureSlope:
   {
-    buffer->moduledata[moduledata_index] = (uint16_t)nimh_bms_check_temperature_state();
+//    buffer->moduledata[moduledata_index] = (uint16_t)nimh_bms_check_temperature_state();
     return true;
   }
+
+#if defined(EXTENDED_COMMANDSET)
+  case COMMAND::SetLimites:
+  {
+    bat_my_lib.set_limites((uint16_t*)buffer->moduledata, (uint16_t)0xFFFF);
+    SettingsHaveChanged = true;
+    return true;
+  }
+  
+  case COMMAND::GetLimites:
+  {
+    LIMITES_UNION limun;
+    limun.vector=buffer->moduledata;
+    bat_my_lib.get_limites((MY_LIB_limites*)limun.structure);
+    return true;
+  }
+  
+  case COMMAND::GetParameters:
+  {
+    bat_my_lib.get_params((uint16_t*)buffer->moduledata);
+    return true;
+  }
+  
+  case COMMAND::ClearError:
+  {
+    bat_my_lib.error_clear();
+    return true;
+  }
+#endif
 
   }
 
