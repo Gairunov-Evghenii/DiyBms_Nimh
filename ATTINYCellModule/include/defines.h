@@ -14,7 +14,7 @@ https://creativecommons.org/licenses/by-nc-sa/2.0/uk/
 
 #include "EmbeddedFiles_Defines.h"
 
-#define EXTENDED_COMMANDSET  32
+//#define EXTENDED_COMMANDSET  5
 
 #ifndef DIYBMS_DEFINES_H // include guard
 #define DIYBMS_DEFINES_H

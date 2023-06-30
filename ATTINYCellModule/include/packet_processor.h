@@ -83,6 +83,9 @@ public:
 
   uint16_t ExternalTemperature();
 
+  uint16_t IntTemperature();
+  uint16_t ExtTemperature();
+
   volatile float MilliAmpHourBalanceCounter = 0;
 
   //Returns TRUE if the module is in "bypassing current" mode

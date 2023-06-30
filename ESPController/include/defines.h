@@ -119,6 +119,7 @@ typedef union {
 } FLOATUNION_t;
 
 // Only the lowest 4 bits can be used!
+// if not defined EXTENDED_COMMANDSET variable
 enum COMMAND : uint8_t
 {
   ResetBadPacketCounter = 0,
@@ -136,7 +137,14 @@ enum COMMAND : uint8_t
   ReadInternalTemperature=12,
   ReadExternalTemperature=13,
   DebugNimhState=14,
-  DebugNimhTemperatureSlope=15
+  DebugNimhTemperatureSlope=15,
+
+#if defined(EXTENDED_COMMANDSET)
+  SetLimites=16,
+  GetLimites=17,
+  GetParameters=18,
+  ClearError=19,
+#endif
 };
 
 //NOTE THIS MUST BE EVEN IN SIZE (BYTES) ESP8266 IS 32 BIT AND WILL ALIGN AS SUCH!
@@ -150,6 +158,45 @@ struct PacketStruct
   uint16_t moduledata[maximum_cell_modules_per_packet];
   uint16_t crc;
 } __attribute__((packed));
+
+struct limites
+{
+    uint16_t    lim_voltage[2];
+    int16_t     lim_int_temp[2];
+    uint16_t    lim_resistance[2];
+    int16_t     lim_ext_temp[2];
+    int16_t     lim_diff_voltage[2];
+    int16_t     lim_diff_int_temp[2];
+    int16_t     lim_diff_resistance[2];
+    int16_t     lim_diff_ext_temp[2];
+};
+
+struct parameters
+{
+    uint16_t    voltage;
+    int16_t     int_temp;
+    uint16_t    resistance;
+    int16_t     ext_temp;
+    int16_t     diff_voltage;
+    int16_t     diff_int_temp;
+    int16_t     diff_resistance;
+    int16_t     diff_ext_temp;
+    uint64_t    time;
+    uint16_t    error_state;
+    uint16_t    error_save;
+};
+
+typedef union INT16_union
+{
+    int16_t s;
+    uint16_t u;
+} INT16_UNION;
+
+typedef union
+{
+    uint16_t w[4];
+    uint64_t qw;
+} UINT64_UNION;
 
 struct CellModuleInfo
 {
@@ -195,6 +242,9 @@ struct CellModuleInfo
 
   uint16_t BalanceCurrentCount;
   uint16_t PacketReceivedCount;
+
+  limites lims;
+  parameters params;
 };
 
 // This enum holds the states the controller goes through whilst

@@ -286,7 +286,7 @@ void setup()
   myPacketSerial.begin(&Serial, &onPacketReceived, sizeof(PacketStruct), SerialPacketReceiveBuffer, sizeof(SerialPacketReceiveBuffer));
   nimh_bms_init(myConfig.BypassThresholdmV);
   ML_limites.lim_voltage[MAX] = myConfig.BypassThresholdmV;
-  bat_my_lib.set_limites(&ML_limites, MAX_VOLTAGE_MASK);
+  bat_my_lib.set_limites(&ML_limites, (uint16_t)0xFFFF);
 }
 
 void BalanceTimer()
@@ -373,7 +373,7 @@ inline void identifyModule()
 #if defined(DIYBMSMODULEVERSION) && DIYBMSMODULEVERSION < 440
     diyBMSHAL::BlueLedOn();
 #else
-    diyBMSHAL::NotificationLedOn();
+//    diyBMSHAL::NotificationLedOn();
 #endif
     PP.identifyModule--;
 
@@ -382,7 +382,7 @@ inline void identifyModule()
 #if defined(DIYBMSMODULEVERSION) && DIYBMSMODULEVERSION < 440
       diyBMSHAL::BlueLedOff();
 #else
-      diyBMSHAL::NotificationLedOff();
+//      diyBMSHAL::NotificationLedOff();
 #endif
     }
   }
@@ -397,6 +397,19 @@ void loop()
   Serial.println("Hello world!");
 }
 */
+
+//MY_LIB processing
+inline void my_lib_processing()
+{
+  bat_my_lib.set_time(millis());
+  bat_my_lib.set_voltage(PP.CellVoltage());
+  bat_my_lib.set_ext_temp(PP.ExtTemperature());
+  bat_my_lib.set_int_temp(PP.IntTemperature());
+  bat_my_lib.calc();
+  if(bat_my_lib.get_error_save())diyBMSHAL::NotificationLedOn();
+  else diyBMSHAL::NotificationLedOff();
+  bat_my_lib.need_reread = false;
+}
 
 void loop()
 {
@@ -413,6 +426,8 @@ void loop()
   ML_limites.lim_voltage[MAX] = myConfig.BypassThresholdmV;
   bat_my_lib.set_limites(&ML_limites, MAX_VOLTAGE_MASK);
   }
+
+  if(bat_my_lib.need_reread) my_lib_processing();
 
   if (wdt_triggered)
   {
@@ -478,17 +493,6 @@ void loop()
     nimh_bms_sample_range_tick();
   }
   
-
-  //MY_LIB processing
-  {
-    bat_my_lib.set_time(millis());
-    bat_my_lib.set_voltage(PP.CellVoltage());
-    bat_my_lib.set_temperature(PP.ExternalTemperature());
-    bat_my_lib.calc();
-    if(bat_my_lib.get_error_save())diyBMSHAL::NotificationLedOn();
-    else diyBMSHAL::NotificationLedOff();
-  }
-
   // Switch reference off if we are not in bypass (otherwise leave on)
   diyBMSHAL::ReferenceVoltageOff();
   diyBMSHAL::TemperatureVoltageOff();

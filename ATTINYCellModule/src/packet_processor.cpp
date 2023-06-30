@@ -45,8 +45,19 @@ int16_t PacketProcessor::InternalTemperature()
   return Steinhart::ThermistorToCelcius(INT_BCOEFFICIENT, raw_adc_onboard_temperature, MAXIUMUM_ATTINY_ADC_SCALE);
 }
 
-uint16_t PacketProcessor::ExternalTemperature(){
+uint16_t PacketProcessor::ExternalTemperature()
+{
   return Steinhart::ThermistorToCelciusFloat(INT_BCOEFFICIENT, raw_adc_external_temperature, MAXIUMUM_ATTINY_ADC_SCALE);
+}
+
+uint16_t PacketProcessor::IntTemperature()
+{
+  return Steinhart::ThermistorToCelciusFloat2(INT_BCOEFFICIENT, raw_adc_onboard_temperature, MAXIUMUM_ATTINY_ADC_SCALE);
+}
+
+uint16_t PacketProcessor::ExtTemperature()
+{
+  return Steinhart::ThermistorToCelciusFloat2(INT_BCOEFFICIENT, raw_adc_external_temperature, MAXIUMUM_ATTINY_ADC_SCALE);
 }
 
 // Returns TRUE if the cell voltage is greater than the required setting
@@ -242,7 +253,7 @@ bool PacketProcessor::processPacket(PacketStruct *buffer)
 {
   uint8_t moduledata_index = mymoduleaddress % maximum_cell_modules;
 #if defined(EXTENDED_COMMANDSET)
-  switch (buffer->command & 0x1F)
+  switch (buffer->command & 0x7F)
 #else
   switch (buffer->command & 0x0F)
 #endif
@@ -462,6 +473,10 @@ bool PacketProcessor::processPacket(PacketStruct *buffer)
   case COMMAND::GetParameters:
   {
     bat_my_lib.get_params((uint16_t*)buffer->moduledata);
+#if defined(MY_LIB_DEBUG)
+    bat_my_lib.need_reread = true;
+    diyBMSHAL::FlashNotificationLed(2, 50);
+#endif
     return true;
   }
   

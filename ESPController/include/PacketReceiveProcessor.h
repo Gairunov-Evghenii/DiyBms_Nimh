@@ -39,7 +39,12 @@ private:
   PacketStruct _packetbuffer;
   //uint8_t ReplyFromBank() {return (_packetbuffer.address & B00110000) >> 4;}
   //See issue 11 - if we receive zero for the address then we have 16 modules or no modules and a loop
+
+#if defined(EXTENDED_COMMANDSET)
+  uint8_t ReplyForCommand() { return (_packetbuffer.command & 0x7F); }
+#else
   uint8_t ReplyForCommand() { return (_packetbuffer.command & 0x0F); }
+#endif
   bool ReplyWasProcessedByAModule() { return (_packetbuffer.command & B10000000) > 0; }
 
   void ProcessReplySettings();
@@ -56,6 +61,11 @@ private:
   void ProcessReplyNimhState();
   void ProcessReplyNimhTemperatureSlope();
   void ProcessReplyNimhVoltageSlope();
+
+#if defined(EXTENDED_COMMANDSET)
+  void ProcessReplyReadLimites();
+  void ProcessReplyReadParameters();
+#endif
 };
 
 #endif

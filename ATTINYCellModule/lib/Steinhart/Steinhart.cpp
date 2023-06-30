@@ -53,6 +53,24 @@ uint16_t Steinhart::ThermistorToCelciusFloat(uint16_t BCOEFFICIENT, uint16_t Raw
  return (int16_t)-999;
 }
 
+uint16_t Steinhart::ThermistorToCelciusFloat2(uint16_t BCOEFFICIENT, uint16_t RawADC, float ADCScaleMax) {
+#define NOMINAL_TEMPERATURE 25
+ if (RawADC>0){
+    float steinhart = (ADCScaleMax/(float)RawADC - 1.0);
+    steinhart = log(steinhart); // ln(R/Ro)
+    steinhart /= BCOEFFICIENT; // 1/B * ln(R/Ro)
+    steinhart += 1.0 / (NOMINAL_TEMPERATURE + 273.15); // + (1/To)
+    steinhart = 1.0 / steinhart; // Invert
+    steinhart -= 273.15; // convert to oC
+    if(steinhart < 0){//sets the bms 1 to represent negative number
+      steinhart = -steinhart;
+      return 0x8000 | (uint16_t)(steinhart*100);
+    }
+    return (uint16_t)(steinhart*100);
+ }
+ return (int16_t)-999;
+}
+
 //This function reduces the scale of temperatures from int16_t type to a single byte (unsigned)
 //We have an artifical floor at 40oC, anything below +40 is considered negative (below freezing)
 //Gives range of -40 to +216 degrees C

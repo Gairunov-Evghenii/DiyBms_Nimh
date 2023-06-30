@@ -52,11 +52,11 @@ HARDWARE ABSTRACTION CODE FOR tinyAVR2
 void diyBMSHAL::FlashNotificationLed(size_t times, uint32_t milliseconds)
 {
   for (size_t i = 0; i < times; i++)
-  {/*
+  {
     NotificationLedOn();
     delay(milliseconds);
     NotificationLedOff();
-    delay(milliseconds);*/
+    delay(milliseconds);
   }
 }
 

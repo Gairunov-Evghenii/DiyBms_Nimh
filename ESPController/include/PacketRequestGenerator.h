@@ -44,6 +44,13 @@ public:
   void sendNimhStateRequest(uint8_t startmodule, uint8_t endmodule);
   void sendNimhTemperatureSlopeRequest(uint8_t startmodule, uint8_t endmodule);
 
+#if defined(EXTENDED_COMMANDSET)
+  void sendSaveLimites(uint8_t m, limites* lim);
+  void sendReadLimitesRequest(uint8_t startmodule, uint8_t endmodule);
+  void sendReadParametersRequest(uint8_t startmodule, uint8_t endmodule);
+  void sendClearErrorRequest(uint8_t startmodule, uint8_t endmodule);
+#endif
+
   uint32_t packetsGenerated = 0;
 
 

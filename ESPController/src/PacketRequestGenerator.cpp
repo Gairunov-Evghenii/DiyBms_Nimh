@@ -185,3 +185,49 @@ void PacketRequestGenerator::sendNimhTemperatureSlopeRequest(uint8_t startmodule
 {
   BuildAndSendRequest(COMMAND::DebugNimhTemperatureSlope, startmodule, endmodule);
 }
+
+#if defined(EXTENDED_COMMANDSET)
+void PacketRequestGenerator::sendSaveLimites(uint8_t m, limites* lim)
+{
+  PacketStruct _packetbuffer;
+  clearPacket(&_packetbuffer);
+  setPacketAddressModuleRange(&_packetbuffer, m, m);
+  //Command - WriteSettings
+  _packetbuffer.command = COMMAND::SetLimites;
+
+  INT16_UNION IU;
+
+  _packetbuffer.moduledata[0] = lim->lim_voltage[0];
+  _packetbuffer.moduledata[1] = lim->lim_voltage[1];
+  IU.s = lim->lim_int_temp[0]; _packetbuffer.moduledata[2] = IU.u;
+  IU.s = lim->lim_int_temp[1]; _packetbuffer.moduledata[3] = IU.u;
+  _packetbuffer.moduledata[4] = lim->lim_resistance[0];
+  _packetbuffer.moduledata[5] = lim->lim_resistance[1];
+  IU.s = lim->lim_ext_temp[0]; _packetbuffer.moduledata[6] = IU.u;
+  IU.s = lim->lim_ext_temp[1]; _packetbuffer.moduledata[7] = IU.u;
+  IU.s = lim->lim_diff_voltage[0]; _packetbuffer.moduledata[8] = IU.u;
+  IU.s = lim->lim_diff_voltage[1]; _packetbuffer.moduledata[9] = IU.u;
+  IU.s = lim->lim_diff_int_temp[0]; _packetbuffer.moduledata[10] = IU.u;
+  IU.s = lim->lim_diff_int_temp[1]; _packetbuffer.moduledata[11] = IU.u;
+  IU.s = lim->lim_diff_resistance[0]; _packetbuffer.moduledata[12] = IU.u;
+  IU.s = lim->lim_diff_resistance[1]; _packetbuffer.moduledata[13] = IU.u;
+  IU.s = lim->lim_diff_ext_temp[0]; _packetbuffer.moduledata[14] = IU.u;
+  IU.s = lim->lim_diff_ext_temp[1]; _packetbuffer.moduledata[15] = IU.u;
+  pushPacketToQueue(&_packetbuffer);
+}
+
+void PacketRequestGenerator::sendReadLimitesRequest(uint8_t startmodule, uint8_t endmodule)
+{
+  BuildAndSendRequest(COMMAND::GetLimites, startmodule, endmodule);
+}
+
+void PacketRequestGenerator::sendReadParametersRequest(uint8_t startmodule, uint8_t endmodule)
+{
+  BuildAndSendRequest(COMMAND::GetParameters, startmodule, endmodule);
+}
+
+void PacketRequestGenerator::sendClearErrorRequest(uint8_t startmodule, uint8_t endmodule)
+{
+  BuildAndSendRequest(COMMAND::ClearError, startmodule, endmodule);
+}
+#endif

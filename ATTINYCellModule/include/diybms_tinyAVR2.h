@@ -158,6 +158,9 @@ public:
     // Wake up on Serial port RX
     diyBMSHAL::EnableStartFrameDetection();
 
+    //Enable TimerB in standby mode for millis()
+    TCB0.CTRLA |= TCB_RUNSTDBY_bm;
+
     set_sleep_mode(SLEEP_MODE_STANDBY);
     sleep_enable();
     sleep_cpu();

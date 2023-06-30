@@ -169,7 +169,11 @@ void dumpPacketToDebug(char indicator, PacketStruct *buffer)
   SERIAL_DEBUG.print(' ');
 
   //TODO: Could store these in PROGMEM char array
+#if defined(EXTENDED_COMMANDSET)
+  switch (buffer->command & 0x7F)
+#else
   switch (buffer->command & 0x0F)
+#endif
   {
   case COMMAND::ResetBadPacketCounter:
     SERIAL_DEBUG.print(F("ResetC   "));
@@ -216,6 +220,20 @@ void dumpPacketToDebug(char indicator, PacketStruct *buffer)
   case COMMAND::DebugNimhTemperatureSlope:
     SERIAL_DEBUG.print(F("DebugNimhTemperatureSlope   "));
     break;
+#if defined(EXTENDED_COMMANDSET)
+  case COMMAND::SetLimites:
+    SERIAL_DEBUG.print(F("SetLimites   "));
+    break;
+  case COMMAND::GetLimites:
+    SERIAL_DEBUG.print(F("GetLimites   "));
+    break;
+  case COMMAND::GetParameters:
+    SERIAL_DEBUG.print(F("GetParameters   "));
+    break;
+  case COMMAND::ClearError:
+    SERIAL_DEBUG.print(F("ClearError   "));
+    break;
+#endif
   default:
     SERIAL_DEBUG.print(F("??????   "));
     break;
@@ -336,7 +354,11 @@ void onPacketReceived()
   PacketStruct ps;
   memcpy(&ps, SerialPacketReceiveBuffer, sizeof(PacketStruct));
 
+#if defined(EXTENDED_COMMANDSET)
+  if ((ps.command & 0x7F) == COMMAND::Timing)
+#else
   if ((ps.command & 0x0F) == COMMAND::Timing)
+#endif
   {
     //Timestamp at the earliest possible moment
     uint32_t t = millis();
@@ -598,11 +620,14 @@ void timerProcessRules()
 
 void timerEnqueueCallback()
 {
+#if defined(MY_DEBUGG)
   static uint64_t last_enter = 0;
-  last_enter = millis() - last_enter;
-  #if defined(MY_DEBUGG)
-    SERIAL_DEBUG.printf("\ntimer enquee enter: %d\n", last_enter);
-  #endif
+  uint64_t current_enter;
+  current_enter = millis();
+  SERIAL_DEBUG.printf("\ntimer enquee enter: %llu", current_enter);
+  SERIAL_DEBUG.printf("\ntimer enquee interval: %llu\n", current_enter - last_enter);
+  last_enter = current_enter;
+#endif
   //this is called regularly on a timer, it determines what request to make to the modules (via the request queue)
   uint16_t i = 0;
   uint16_t max = TotalNumberOfCells();
@@ -621,11 +646,17 @@ void timerEnqueueCallback()
 
     //Need to watch overflow of the uint8 here...
     prg.sendCellVoltageRequest(startmodule, endmodule);
+#if defined(EXTENDED_COMMANDSET_DEBUG)
+//    SERIAL_DEBUG.printf("\ntimerEnqueueCallback()\n    prg.sendCellVoltageRequest(startmodule, endmodule);");
+#endif
     // prg.sendCellTemperatureRequest(startmodule, endmodule);
     prg.sendCellExternalTemperatureRequest(startmodule, endmodule);
     prg.sendCellInternalTemperatureRequest(startmodule, endmodule);
     // prg.sendNimhStateRequest(startmodule, endmodule);
     // prg.sendNimhTemperatureSlopeRequest(startmodule, endmodule);
+#if defined(EXTENDED_COMMANDSET)
+    prg.sendReadParametersRequest(startmodule, endmodule);
+#endif
     
     if(mqtt_connected){
       sendMqttPacket();
@@ -640,6 +671,19 @@ void timerEnqueueCallback()
         //We only need 1 reading for whole bank
         break;
       }
+#if defined(EXTENDED_COMMANDSET_DEBUG)
+//      SERIAL_DEBUG.printf("\nMODULE NUMBER: %d", m);
+//      SERIAL_DEBUG.printf("\nvoltage: %d", cmi[m].params.voltage);
+//      SERIAL_DEBUG.printf("\nint_temp: %d", cmi[m].params.int_temp);
+//      SERIAL_DEBUG.printf("\nresistance: %d", cmi[m].params.resistance);
+//      SERIAL_DEBUG.printf("\next_temp: %d", cmi[m].params.ext_temp);
+//      SERIAL_DEBUG.printf("\ndiff_voltage: %d", cmi[m].params.diff_voltage);
+//      SERIAL_DEBUG.printf("\ndiff_int_temp: %d", cmi[m].params.diff_int_temp);
+//      SERIAL_DEBUG.printf("\ndiff_resistance: %d", cmi[m].params.diff_resistance);
+//      SERIAL_DEBUG.printf("\ndiff_ext_temp: %d", cmi[m].params.diff_ext_temp);
+//      SERIAL_DEBUG.printf("\nerror_state: %d", cmi[m].params.error_state);
+//      SERIAL_DEBUG.printf("\nerror_save: %d", cmi[m].params.error_save);
+#endif
     }
 
     //Move to the next bank
@@ -693,7 +737,7 @@ WiFi.status() only returns:
 
 void connectToMqtt()
 {
-  SERIAL_DEBUG.println(F("Connecting to MQTT..."));
+//  SERIAL_DEBUG.println(F("Connecting to MQTT..."));
   mqttClient.connect();
 }
 
@@ -936,7 +980,7 @@ void onWifiDisconnect(const WiFiEventStationModeDisconnected &event)
 
 void onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
 {
-  SERIAL_DEBUG.println(F("Disconnected from MQTT."));
+//  SERIAL_DEBUG.println(F("Disconnected from MQTT."));
 
   mqtt_connected = false;
   //myTimerSendMqttPacket.detach();
@@ -1459,13 +1503,16 @@ void Relay_Off_Wrapper(uint8_t pin){
 
 void setup()
 {
-  WiFi.mode(WIFI_OFF);
 
   //Debug serial output
 
   //ESP8266 uses dedicated 2nd serial port, but transmit only
   SERIAL_DEBUG.begin(115200, SERIAL_8N1, SERIAL_TX_ONLY);
   SERIAL_DEBUG.setDebugOutput(true);
+#if defined(EXTENDED_COMMANDSET_DEBUG)
+  SERIAL_DEBUG.printf("\n\n\nSETUP STARTS\n\n");
+#endif
+  WiFi.mode(WIFI_OFF);
 
   //We generate a unique number which is used in all following JSON requests
   //we use this as a simple method to avoid cross site scripting attacks
@@ -1626,12 +1673,18 @@ void setup()
                     mysettings.min_admisble_voltage, 
                     mysettings.max_admisible_temperature, 
                     mysettings.min_admisible_temperature);
+  #if defined(EXTENDED_COMMANDSET_DEBUG)
+    SERIAL_DEBUG.printf("\n\n\nSETUP ENDS\n\n");
+  #endif
 }
 
 unsigned long wifitimer = 0;
 
 void loop()
 {
+  #if defined(EXTENDED_COMMANDSET_DEBUG)
+//    SERIAL_DEBUG.printf("\n\n\nLOOP STARTS\n\n");
+  #endif
   //ESP_LOGW("LOOP","LOOP");
   unsigned long currentMillis = millis();
 
@@ -1659,4 +1712,7 @@ void loop()
   }
 
   MDNS.update();
+  #if defined(EXTENDED_COMMANDSET_DEBUG)
+//    SERIAL_DEBUG.printf("\n\n\nLOOP ENDS\n\n");
+  #endif
 }

@@ -32,11 +32,13 @@ bool PacketReceiveProcessor::ProcessReply(PacketStruct *receivebuffer)
 
     if (packetLastReceivedSequence > 0 && _packetbuffer.sequence != packetLastReceivedSequence + 1)
     {
+      /*
       SERIAL_DEBUG.println();
       SERIAL_DEBUG.print(F("OOS Error, expected="));
       SERIAL_DEBUG.print(packetLastReceivedSequence+1, HEX);
       SERIAL_DEBUG.print(", got=");
       SERIAL_DEBUG.println(_packetbuffer.sequence, HEX);
+      */
       totalOutofSequenceErrors++;
     }
 
@@ -87,24 +89,32 @@ bool PacketReceiveProcessor::ProcessReply(PacketStruct *receivebuffer)
         ProcessReplyBalancePower();
         break;
 
-    case COMMAND::ReadBalanceCurrentCounter:
+      case COMMAND::ReadBalanceCurrentCounter:
         ProcessReplyReadBalanceCurrentCounter();
         break;
-    case COMMAND::ReadPacketReceivedCounter:
+      case COMMAND::ReadPacketReceivedCounter:
         ProcessReplyReadPacketReceivedCounter();
         break;
-    case COMMAND::ReadInternalTemperature:
+      case COMMAND::ReadInternalTemperature:
         ProcessReplyInternalTemperature();
         break;
-    case COMMAND::ReadExternalTemperature:
+      case COMMAND::ReadExternalTemperature:
         ProcessReplyExternalTemperature();
         break;
-    case COMMAND::DebugNimhState:
+      case COMMAND::DebugNimhState:
         ProcessReplyNimhState();
         break;
-    case COMMAND::DebugNimhTemperatureSlope:
+      case COMMAND::DebugNimhTemperatureSlope:
         ProcessReplyNimhTemperatureSlope();
         break;
+#if defined(EXTENDED_COMMANDSET)
+      case COMMAND::GetLimites:
+        ProcessReplyReadLimites();
+        break;
+      case COMMAND::GetParameters:
+        ProcessReplyReadParameters();
+        break;
+#endif
       }
 
 #if defined(PACKET_LOGGING_RECEIVE)
@@ -326,3 +336,62 @@ void PacketReceiveProcessor::ProcessReplyNimhTemperatureSlope(){
     q++;
   }
 }
+
+#if defined(EXTENDED_COMMANDSET)
+void PacketReceiveProcessor::ProcessReplyReadLimites()
+{
+  INT16_UNION IU;
+  IU.u = _packetbuffer.moduledata[0]; cmi[_packetbuffer.start_address].lims.lim_voltage[0] = IU.u;
+  IU.u = _packetbuffer.moduledata[1]; cmi[_packetbuffer.start_address].lims.lim_voltage[1] = IU.u;
+  IU.u = _packetbuffer.moduledata[2]; cmi[_packetbuffer.start_address].lims.lim_int_temp[0] = IU.s;
+  IU.u = _packetbuffer.moduledata[3]; cmi[_packetbuffer.start_address].lims.lim_int_temp[1] = IU.s;
+  IU.u = _packetbuffer.moduledata[4]; cmi[_packetbuffer.start_address].lims.lim_resistance[0] = IU.u;
+  IU.u = _packetbuffer.moduledata[5]; cmi[_packetbuffer.start_address].lims.lim_resistance[1] = IU.u;
+  IU.u = _packetbuffer.moduledata[6]; cmi[_packetbuffer.start_address].lims.lim_ext_temp[0] = IU.s;
+  IU.u = _packetbuffer.moduledata[7]; cmi[_packetbuffer.start_address].lims.lim_ext_temp[1] = IU.s;
+  IU.u = _packetbuffer.moduledata[8]; cmi[_packetbuffer.start_address].lims.lim_diff_voltage[0] = IU.s;
+  IU.u = _packetbuffer.moduledata[9]; cmi[_packetbuffer.start_address].lims.lim_diff_voltage[1] = IU.s;
+  IU.u = _packetbuffer.moduledata[10]; cmi[_packetbuffer.start_address].lims.lim_diff_int_temp[0] = IU.s;
+  IU.u = _packetbuffer.moduledata[11]; cmi[_packetbuffer.start_address].lims.lim_diff_int_temp[1] = IU.s;
+  IU.u = _packetbuffer.moduledata[12]; cmi[_packetbuffer.start_address].lims.lim_diff_resistance[0] = IU.s;
+  IU.u = _packetbuffer.moduledata[13]; cmi[_packetbuffer.start_address].lims.lim_diff_resistance[1] = IU.s;
+  IU.u = _packetbuffer.moduledata[14]; cmi[_packetbuffer.start_address].lims.lim_diff_ext_temp[0] = IU.s;
+  IU.u = _packetbuffer.moduledata[15]; cmi[_packetbuffer.start_address].lims.lim_diff_ext_temp[1] = IU.s;
+}
+
+void PacketReceiveProcessor::ProcessReplyReadParameters()
+{
+  INT16_UNION IU;
+  UINT64_UNION l;
+  IU.u = _packetbuffer.moduledata[0]; cmi[_packetbuffer.start_address].params.voltage = IU.u;
+  IU.u = _packetbuffer.moduledata[1]; cmi[_packetbuffer.start_address].params.int_temp = IU.s;
+  IU.u = _packetbuffer.moduledata[2]; cmi[_packetbuffer.start_address].params.resistance = IU.u;
+  IU.u = _packetbuffer.moduledata[3]; cmi[_packetbuffer.start_address].params.ext_temp = IU.s;
+  IU.u = _packetbuffer.moduledata[4]; cmi[_packetbuffer.start_address].params.diff_voltage = IU.s;
+  IU.u = _packetbuffer.moduledata[5]; cmi[_packetbuffer.start_address].params.diff_int_temp = IU.s;
+  IU.u = _packetbuffer.moduledata[6]; cmi[_packetbuffer.start_address].params.diff_resistance = IU.s;
+  IU.u = _packetbuffer.moduledata[7]; cmi[_packetbuffer.start_address].params.diff_ext_temp = IU.s;
+  l.w[0] = _packetbuffer.moduledata[8];
+  l.w[1] = _packetbuffer.moduledata[9];
+  l.w[2] = _packetbuffer.moduledata[10];
+  l.w[3] = _packetbuffer.moduledata[11]; cmi[_packetbuffer.start_address].params.time = l.qw;
+  IU.u = _packetbuffer.moduledata[12]; cmi[_packetbuffer.start_address].params.error_state = IU.u;
+  IU.u = _packetbuffer.moduledata[13]; cmi[_packetbuffer.start_address].params.error_save = IU.u;
+#if defined(EXTENDED_COMMANDSET_DEBUG)
+  SERIAL_DEBUG.printf("\nAVRtime: %llu", cmi[_packetbuffer.start_address].params.time);
+  SERIAL_DEBUG.printf("\nvoltage: %u", cmi[_packetbuffer.start_address].params.voltage);
+  SERIAL_DEBUG.printf("\nint_temp: %d", cmi[_packetbuffer.start_address].params.int_temp);
+//  SERIAL_DEBUG.printf("\nresistance: %u", cmi[_packetbuffer.start_address].params.resistance);
+  SERIAL_DEBUG.printf("\next_temp: %d", cmi[_packetbuffer.start_address].params.ext_temp);
+
+  SERIAL_DEBUG.printf("\ndiff_time: %u", _packetbuffer.moduledata[14]);
+  SERIAL_DEBUG.printf("\ndiff_voltage: %d", cmi[_packetbuffer.start_address].params.diff_voltage);
+  SERIAL_DEBUG.printf("\ndiff_int_temp: %d", cmi[_packetbuffer.start_address].params.diff_int_temp);
+//  SERIAL_DEBUG.printf("\ndiff_resistance: %d", cmi[_packetbuffer.start_address].params.diff_resistance);
+  SERIAL_DEBUG.printf("\ndiff_ext_temp: %d", cmi[_packetbuffer.start_address].params.diff_ext_temp);
+
+  SERIAL_DEBUG.printf("\nerror_state: %#06x", cmi[_packetbuffer.start_address].params.error_state);
+  SERIAL_DEBUG.printf("\nerror_save: %#06x\n", cmi[_packetbuffer.start_address].params.error_save);
+#endif
+}
+#endif
