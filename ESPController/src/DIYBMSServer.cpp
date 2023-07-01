@@ -1308,9 +1308,6 @@ String DIYBMSServer::TemplateProcessor(const String &var)
   if (var == "graph_voltagelow")
     return String(_mysettings->graph_voltagelow);
 
-  if (var == "integrity_file_jquery_js")
-    return String(integrity_file_jquery_js);
-
   return String();
 }
 

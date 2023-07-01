@@ -100,12 +100,6 @@ void DIYBMSSoftAP::SetupAccessPoint(AsyncWebServer *webserver)
     request->redirect("/softap.htm");
   });
 
-  _myserver->on("/softap.htm", HTTP_GET,
-                [](AsyncWebServerRequest *request) {
-                  AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", (char *)file_softap_htm, DIYBMSSoftAP::TemplateProcessor);
-                  request->send(response);
-                });
-
   _myserver->on("/save", HTTP_POST, handleSave);
   //_myserver->onNotFound(handleNotFound);
   _myserver->begin();
