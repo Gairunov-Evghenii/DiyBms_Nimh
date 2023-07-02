@@ -14,8 +14,10 @@
         var DEFAULT_GRAPH_MIN_VOLTAGE = parseFloat('%graph_voltagelow%');
         var XSS_KEY = '%XSS_KEY%';
     </script>
-    <script type='text/javascript' src='https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/jquery.js' crossorigin='anonymous'>
-    </script>
+    <script type='text/javascript' src='https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/jquery.js' crossorigin='anonymous'></script>
+    <script type='text/javascript' src='https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/echarts.min.js' crossorigin='anonymous'></script>
+    <script type='text/javascript' src='https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/echarts_gl.min.js' crossorigin='anonymous'></script>
+    <script type='text/javascript' src='https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/pagecode.js' crossorigin='anonymous'></script>
     <title>DIY BMS CONTROLLER v4</title>
 </head>
 
@@ -681,32 +683,6 @@
         var g2 = null;
         var g3 = null;
 
-        jQuery.cachedScript = function (url, options) {
-            options = $.extend(options || {}, {
-                dataType: "script",
-                cache: true,
-                url: url
-            });
-            return jQuery.ajax(options);
-        };
-
-        $(document).ready(function () {
-            $.cachedScript("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/echarts.min.js").done(function (script, textStatus) {
-                    $.cachedScript("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/echarts_gl.min.js").done(function (script, textStatus) {
-                            $.cachedScript("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/pagecode.js").done(function (script, textStatus) {
-                                //All done
-                            }).fail(function (jqxhr, settings, exception) {
-                                $("#jslibrary").show();
-                            });
-                        })
-                        .fail(function (jqxhr, settings, exception) {
-                            $("#jslibrary").show();
-                        });
-                })
-                .fail(function (jqxhr, settings, exception) {
-                    $("#jslibrary").show();
-                });
-        });
     </script>
 </body>
 
