@@ -1,19 +1,46 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <script>
-    function loadPage() {
-      fetch("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/default.htm")
-        .then(response => response.text())
-        .then(html => {
-          document.open();
-          document.write(html);
-          document.close();
-        });
-    }
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet" />
+  <link href="https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/style.css" rel="stylesheet" />
+  <script type="text/javascript">
+      const MAXIMUM_NUMBER_OF_BANKS = 16;
+      const MAXIMUM_NUMBER_OF_MODULES_PER_DATA_PACKET = 16;
+
+      var DEFAULT_GRAPH_MAX_VOLTAGE = parseFloat('%graph_voltagehigh%');
+      var DEFAULT_GRAPH_MIN_VOLTAGE = parseFloat('%graph_voltagelow%');
+      var XSS_KEY = '%XSS_KEY%';
   </script>
+  <script type='text/javascript' src='https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/jquery.js' crossorigin='anonymous'></script>
+  <script type='text/javascript' src='https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/echarts.min.js' crossorigin='anonymous'></script>
+  <script type='text/javascript' src='https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/echarts_gl.min.js' crossorigin='anonymous'></script>
+  <script type='text/javascript' src='https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/pagecode.js' crossorigin='anonymous'></script>
+
+  <script type="text/javascript">
+      var g1 = null;
+      var g2 = null;
+      var g3 = null;
+
+      function loadPage() {
+        fetch("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/default.htm")
+          .then(response => response.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const newDocument = parser.parseFromString(html, 'text/html');
+            const newBody = newDocument.querySelector('body');
+            const currentBody = document.querySelector('body');
+            currentBody.innerHTML = newBody.innerHTML;
+          });
+      }
+  </script>
+  
+  <title>DIY BMS CONTROLLER v4</title>
 </head>
+
 <body onload="loadPage()">
-  <!-- contents of the original page will be replaced by contents of another-page.html before it loads -->
 </body>
+
 </html>
