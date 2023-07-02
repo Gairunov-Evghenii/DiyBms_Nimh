@@ -36,7 +36,24 @@
             const currentBody = document.querySelector('body');
             currentBody.innerHTML = newBody.innerHTML;
           });
+
+        function setGraphSize() {
+        var containerWidth = $('#graphs').width();
+        var containerHeight = $('#graphs').height();
+        var graphWidth = containerWidth / 2; // Divide container width into two equal parts
+        var graphHeight = containerHeight;
+
+        $('#graph1').width(graphWidth).height(graphHeight);
+        $('#graph2').width(graphWidth).height(graphHeight);
       }
+      // Initial setup
+      setGraphSize();
+
+      // Resize event handler
+      $(window).resize(function() {
+        setGraphSize();
+      });
+    }
   </script>
   
   <title>DIY BMS CONTROLLER v4</title>
