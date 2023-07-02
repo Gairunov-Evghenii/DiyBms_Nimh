@@ -6,6 +6,12 @@
 		{
 			"name": "ATTINYCellModule",
 			"path": "ATTINYCellModule"
+		},
+		{
+			"path": "WebInterface"
+		},
+		{
+			"path": "."
 		}
 	],
 	"settings": {}
