@@ -691,22 +691,19 @@
         };
 
         $(document).ready(function () {
-            $.cachedScript("echarts.min.js").done(function (script, textStatus) {
-                    $.cachedScript("echarts_gl.min.js").done(function (script, textStatus) {
-                            $.cachedScript("pagecode.js").done(function (script, textStatus) {
+            $.cachedScript("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/echarts.min.js").done(function (script, textStatus) {
+                    $.cachedScript("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/echarts_gl.min.js").done(function (script, textStatus) {
+                            $.cachedScript("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/pagecode.js").done(function (script, textStatus) {
                                 //All done
                             }).fail(function (jqxhr, settings, exception) {
-                                alert("pagecode.js");
                                 $("#jslibrary").show();
                             });
                         })
                         .fail(function (jqxhr, settings, exception) {
-                            alert("echarts_gl.min.js");
                             $("#jslibrary").show();
                         });
                 })
                 .fail(function (jqxhr, settings, exception) {
-                    alert("echarts.min.js");
                     $("#jslibrary").show();
                 });
         });
