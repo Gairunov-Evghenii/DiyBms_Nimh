@@ -696,14 +696,17 @@
                             $.cachedScript("pagecode.js").done(function (script, textStatus) {
                                 //All done
                             }).fail(function (jqxhr, settings, exception) {
+                                alert("pagecode.js");
                                 $("#jslibrary").show();
                             });
                         })
                         .fail(function (jqxhr, settings, exception) {
+                            alert("echarts_gl.min.js");
                             $("#jslibrary").show();
                         });
                 })
                 .fail(function (jqxhr, settings, exception) {
+                    alert("echarts.min.js");
                     $("#jslibrary").show();
                 });
         });
