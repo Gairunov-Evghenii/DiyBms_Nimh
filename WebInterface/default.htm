@@ -5,8 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet" />
-    <link href="https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/style.css" rel="stylesheet" />
-    <script type='text/javascript' src='https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/jquery.js' crossorigin='anonymous'></script>
+    <link href="https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/style.css" rel="stylesheet" />
+    <script type='text/javascript' src='https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/jquery.js' crossorigin='anonymous'></script>
     <script type="text/javascript">
         const MAXIMUM_NUMBER_OF_BANKS = 16;
         const MAXIMUM_NUMBER_OF_MODULES_PER_DATA_PACKET = 16;
@@ -20,13 +20,13 @@
         var g3 = null;
   
         $(document).ready(function() {
-        $.getScript("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/echarts.min.js");
-        $.getScript("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/echarts_gl.min.js");
-        $.getScript("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/pagecode.js");
+        $.getScript("https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/echarts.min.js");
+        $.getScript("https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/echarts_gl.min.js");
+        $.getScript("https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/pagecode.js");
         });
   
         function loadPage() {
-          fetch("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/default.htm")
+          fetch("https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/default.htm")
             .then(response => response.text())
             .then(html => {
               const parser = new DOMParser();
@@ -42,9 +42,9 @@
 </head>
 
 <body>
-    <div id="loading"><img src="https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/wait.png" width="64" height="64" alt="Please wait" /></div>
+    <div id="loading"><img src="https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/wait.png" width="64" height="64" alt="Please wait" /></div>
     <div class="header">
-        <div class="logocontainer"><img class="logo" src="https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/logo.png" width="152" height="48" alt="DIYBMS" /></div>
+        <div class="logocontainer"><img class="logo" src="https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/logo.png" width="152" height="48" alt="DIYBMS" /></div>
         <div class="header-right">
             <a id="home" class="active" href="#home">Home</a>
             <a id="modules" href="#modules">Modules</a>
@@ -128,7 +128,7 @@
             <p>Remember, this product is free for personal use, if you would like to make a regular donation to keep the
                 features and improvements flowing, use the Patreon link below. Even just a coffee/beer a month makes a
                 difference. Thank you!
-                <a href="https://www.patreon.com/StuartP" rel="noreferrer" target="_blank"><img src="https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/patron.png"
+                <a href="https://www.patreon.com/StuartP" rel="noreferrer" target="_blank"><img src="https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/patron.png"
                         width="176" height="34" alt="Patron" /></a>
             </p>
         </div>

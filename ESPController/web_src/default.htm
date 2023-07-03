@@ -5,8 +5,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet" />
-  <link href="https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/style.css" rel="stylesheet" />
-  <script type='text/javascript' src='https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/jquery.js' crossorigin='anonymous'></script>
+  <link href="https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/style.css" rel="stylesheet" />
+  <script type='text/javascript' src='https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/jquery.js' crossorigin='anonymous'></script>
 
   <script type="text/javascript">
       const MAXIMUM_NUMBER_OF_BANKS = 16;
@@ -21,13 +21,13 @@
       var g3 = null;
 
       $(document).ready(function() {
-      $.getScript("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/echarts.min.js");
-      $.getScript("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/echarts_gl.min.js");
-      $.getScript("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/pagecode.js");
+      $.getScript("https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/echarts.min.js");
+      $.getScript("https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/echarts_gl.min.js");
+      $.getScript("https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/pagecode.js");
       });
 
       function loadPage() {
-        fetch("https://catalinplesu.github.io/DiyBms_Nimh/WebInterface/default.htm")
+        fetch("https://gairunov-evghenii.github.io/DiyBms_Nimh/WebInterface/default.htm")
           .then(response => response.text())
           .then(html => {
             const parser = new DOMParser();
